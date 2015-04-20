@@ -1,57 +1,39 @@
 <?php
   
   session_start();
-
- // if ((isset($_SESSION['login'])) && ($_SESSION['login'] != '')) 
- // {
- //   header ("Location: main.html", true, 302);
-  //  exit();
- // }
- 
-  $_SESSION['login'] = "123";
-    
-  //Prepare and encode the return results.
-  $arr = array ('response'=>'success', 'URL'=>'buyer.html', 'msg'=>'Logged in. ' . $_SESSION['login']);
-  echo json_encode($arr);
-  exit();
   
-  //User information variables.
-  $uname = "";
-  $pword = "";
-  $errorMessage = "";
-  $num_rows = 0;
+  //Initialize variables.
+  $_SESSION['login'] = "0";
+  $_SESSION['userid'] = "";
+  $_SESSION['username'] = "";
+  $_SESSION['user_type'] = "consumer";
   
-  //Check the username and password.
-  if ((!isset($_POST['username'])) || (!isset($_POST['password'])))
+  //Check the username.
+  if (!isset($_POST['username']))
   {
     //Prepare and encode the return results.
-    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>'Invalid username or password.');
+    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>'Invalid username.');
     echo json_encode($arr);
     
     //Don't continue.
     exit();
   }
   
-  //Get the username and password
-  //that the user entered.
-  $uname = $_POST['username'];
-  $pword = $_POST['password'];
+  //Get the username information.
+  $username = $_POST['username'];
+  $userid = $_POST['userid'];
+  $displayname = $_POST['displayname'];
   
-  //Check the username and password.
-  if ((trim($uname) == '') || (trim($pword == '')))
+  //Check that the username is not empty.
+  if (trim($username) == '') 
   {
     //Prepare and encode the return results.
-    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>'Invalid username or password.');
+    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>'Empty username.');
     echo json_encode($arr);
     
     //Don't continue.
     exit();
   }
-  
-  //Used html special cars function to prevent
-  //scriping attacks.
-  $uname = htmlspecialchars($uname);
-  $pword = htmlspecialchars($pword);
   
   try
   {
@@ -59,42 +41,38 @@
     include "database_connect.php";
     
     //Get the requested user.
-    $stmt = $db->prepare("select username, password from user_account");
+    $stmt = $db->prepare("select username from user_account");
     $stmt->execute();
-    $records = $stmt->fetchAll();
-    
-    //Close the database connection.
+    $records = $stmt->fetch();
     $stmt->closeCursor();
     
-    //Check that it retuned just one user.
+    //Check that it retuned a match.
     if ( count($records) >= 1 )
     {
       
-      //Find a sue rmatch.
-      if ((strcmp($uname, $records[0]["username"]) == 0)
-          && (strcmp($pword, $records[0]["password"]) == 0))
+      //Find a user match.
+      if (strcmp($username, $records["username"]) == 0)
       {
         $_SESSION['login'] = "1";
-        $_SESSION['user_type'] = "";
-         
+        $_SESSION['userid'] = $userid;
+        $_SESSION['username'] = $username;
+        $_SESSION['displayname'] = $displayname;
+        $_SESSION['user_type'] = "consumer";
+        
         //Prepare the return results.
-        $errorMessage= "logged on ";
-        $arr = array ('response'=>'success', 'URL'=>'buyer.html','msg'=>$errorMessage);
+        $arr = array ('response'=>'success', 'URL'=>'buyer.html','msg'=>'Logged in.');
       }
       else
       {
         //Prepare the return results.
-        $errorMessage= 'Incorrect username or password.';
-        $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>$errorMessage);
+        $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>'Incorrect username. Please sign up with a Google account.');
       }
-        
+      
     }
     else 
-    {
-      $errorMessage= "Invalid Logon";
-      
+    { 
       //Prepare the return results.
-      $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>$errorMessage);
+      $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>'User not registered. Please sign up with a Google account.');
     }
     
     //Encode the return results.
@@ -102,10 +80,8 @@
   }
   catch(PDOException $excep) 
   {  
-    $errorMessage = $excep->getMessage();
-    
     //Prepare and encode the return results.
-    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>$errorMessage);
+    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>$excep->getMessage());
     echo json_encode($arr);
   }
 

@@ -30,8 +30,6 @@
     $stmt->bindParam(1, $status);
     $stmt->execute();
     $records = $stmt->fetchAll();
-    
-    //Close the database connection.
     $stmt->closeCursor();
     
     //Create the transactions history.
@@ -46,24 +44,36 @@
       { 
         //Get the foreign key for the transaction info.
         $id_transaction_info_fk =  $transaction_history['id_transaction_info_fk'];
-        $transaction_date =  $transaction_history['date'];
+        $id_services_fk =  $transaction_history['id_services_fk'];
+        $submission_date =  $transaction_history['submission_date'];
         
         //Get the transaction information.
         $stmt2 = $db->prepare("select * from transaction_info where id_transaction_info_pk=?");
         $stmt2->bindParam(1, $id_transaction_info_fk);
         $stmt2->execute();
         $transaction_info = $stmt2->fetch();
+        $stmt2->closeCursor();
+         
+        //Get the services information.
+        $stmt2 = $db->prepare("select * from services where id_services_pk=?");
+        $stmt2->bindParam(1, $id_services_fk);
+        $stmt2->execute();
+        $services = $stmt2->fetch();
         
         /* *** Prepare the return results. *** */
         
         //Create the transaction.
-        $transaction = array ('date' => $transaction_date, 'amount' =>  $transaction_info['amount'], 'status'=>$status );
+        $transaction = array ('submission_date' => $submission_date, 'customer_type' =>$transaction_info['customer_type'], 
+        'service_type' =>$services['service_type'], 'service_description' =>$services['service_description'], 
+        'contract_type' =>$transaction_info['contract_type'], 'job_location'=>$transaction_info['job_location'], 
+        'job_date'=>$transaction_info['job_date'], 'status'=>$status );
         
         //Create the transactions history.
         $transactions_list[$index] =  $transaction; 
         $index = $index + 1;
       } 
       
+      //Prepare the return results.
       $arr = array ('response'=>'success', 'URL'=>'buyer.html','msg'=>$transactions_list,'grid_id'=>$grid_id);
      
     }

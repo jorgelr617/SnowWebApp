@@ -79,7 +79,7 @@ function createDataGridUI(grid_id,response)
     datafields:
     [
       {
-        name: 'Date', map: 'date'
+        name: 'submission_date', map: 'submission_date'
       },
       {
         name: 'Amount', map: 'amount'
@@ -102,7 +102,7 @@ function createDataGridUI(grid_id,response)
       source: dataAdapter,
       columns: 
       [
-        { text: 'Date', datafield: 'Date', width: 150 },
+        { text: 'Submission Date', datafield: 'submission_date', width: 150 },
         { text: 'Amount', datafield: 'Amount', width: 100 },
         { text: 'Status', datafield: 'Status', width: 100 }
       ]
@@ -128,7 +128,7 @@ function populate_selected(data, index)
   $("#SellerID").text(data.msg[index].first_name + " " + data.msg[index].middle_name + " " + data.msg[index].last_name);
   $("#RatingsID").text(data.msg[index].stars);
   $("#JobID").text(data.msg[index].service_description);
-  $("#DateID").text(data.msg[index].date);
+  $("#DateID").text(data.msg[index].submission_date);
   $("#ReviewsID").text(data.msg[index].review);
   
 }
@@ -139,7 +139,7 @@ function clear_state()
   //Create JSON object to clear page state.
   data = 
   {
-   Date: " ",
+   submission_date: " ",
    Amount: " ",
    Status: " "
   };
@@ -160,54 +160,57 @@ function clear_state()
 //manipulated safely by JavaScipt.
 $(document).ready
 (
-  loadScript
-  (
-    '../scripts/common.js',
-    function()
-    {
-      $("#datepicker1, #datepicker2").datepicker(); 
-      
-      $("#MainID").click
-      (
-        function()
-        {
-          window.location.href="../buyer.html";
-        }
-      )
-      
-      $("#SubmitID").click
-      (
-        function ()
-        {
-          alert("Not implemented yet. Click on \"Main or Logout Button\" button.");
-        }
-      );
-      
-      //Refresh the transaction history.
-      $("#datepicker1, #datepicker2").change
-      (
-        function()
-        {
-          //Get the transaction history.
-          getTransactionsHistory("#jqxgrid4","closed");
-        }
-      )
-      
-      $("#jqxgrid4").click
-      ( 
-        function() 
-        {
-          var index = $('#jqxgrid4').jqxGrid('getselectedrowindex');
-          
-          //Fill out the data fields.
-          populate_selected(page_state,index);
-        }
-      );
-      
-      //Get the closed transaction history.
-      getTransactionsHistory("#jqxgrid4","closed");      
-    }
-  )
+  function ()
+  {
+    loadScript
+    (
+      '../scripts/common.js',
+      function()
+      {
+        $("#datepicker1, #datepicker2").datepicker(); 
+        
+        $("#MainID").click
+        (
+          function()
+          {
+            window.location.href="../buyer.html";
+          }
+        )
+        
+        $("#SubmitID").click
+        (
+          function ()
+          {
+            alert("Not implemented yet. Click on \"Main or Logout Button\" button.");
+          }
+        );
+        
+        //Refresh the transaction history.
+        $("#datepicker1, #datepicker2").change
+        (
+          function()
+          {
+            //Get the transaction history.
+            getTransactionsHistory("#jqxgrid4","closed");
+          }
+        )
+        
+        $("#jqxgrid4").click
+        ( 
+          function() 
+          {
+            var index = $('#jqxgrid4').jqxGrid('getselectedrowindex');
+            
+            //Fill out the data fields.
+            populate_selected(page_state,index);
+          }
+        );
+        
+        //Get the closed transaction history.
+        getTransactionsHistory("#jqxgrid4","closed");      
+      }
+    )
+  }
 );
       
     

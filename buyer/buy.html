@@ -66,19 +66,31 @@
       
        <div class="button_panel">
          <span class="Span_Fixed">Customer <br> Type:</span>
-         <select id="CustomerTypeID"><option>All</option></select>
+         <select id="CustomerTypeID">
+           <option>Residential</option>
+           <option>Commercial</option>
+         </select>
        </div>
        <div class="button_panel">
          <span class="Span_Fixed">Service <br> Type:</span>
-         <select id="ServiceTypeID"><option>All</option></select>
+         <select id="ServiceTypeID">
+           <option>Snow removal for driveway/parking lot.</option>
+           <option>Snow rearrangement for driveway/parking lot.</option>
+           <option> Snow removal for roof.</option>
+           <option>Clearing  path to house/business.</option>
+           <option> Clearing sidewalk.</option>
+         </select>
        </div>
        <div class="button_panel">
          <span class="Span_Fixed">Contract <br> Type:</Span>
-         <select id="ContractTypeID"><option>All</option></select>
+         <select id="ContractTypeID">
+           <option>One Time</option>
+           <option>Seasonal</option>
+         </select>
        </div>
        <div class="button_panel">
          <span class="Span_Fixed">Location:</Span>
-         <select id="LocationID"><option>All</option></select>
+         <select id="LocationID"><option>Profile Address</option></select>
        </div>
        <div class="button_panel">
          <span class="Span_Fixed">Date:</Span>
@@ -131,6 +143,8 @@
       <button class="medium_button" id="LogoutID" type="submit" value="Logout">Logout</button>
       
     </div>
+    
+    <?php include('../dialog.html'); ?>
     
   </body>
   

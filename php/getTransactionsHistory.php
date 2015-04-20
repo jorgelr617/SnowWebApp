@@ -38,7 +38,7 @@
     include "database_connect.php";
     
     //Get the requested transaction.
-    $stmt = $db->prepare("select * from transactions_history where status=? and date >= ? and date <= ?");
+    $stmt = $db->prepare("select * from transactions_history where status=? and submission_date >= ? and submission_date <= ?");
     $stmt->bindParam(1, $status);
     $stmt->bindParam(2, $date_from);
     $stmt->bindParam(3, $date_to);
@@ -63,7 +63,7 @@
         $id_services_fk =  $transaction_history['id_services_fk'];
         $id_seller_fk =  $transaction_history['id_seller_fk'];
         
-        $transaction_date =  $transaction_history['date'];
+        $transaction_date =  $transaction_history['submission_date'];
         
         //Get the transaction information.
         $stmt2 = $db->prepare("select * from transaction_info where id_transaction_info_pk=?");
@@ -105,7 +105,7 @@
         $address = $stmt7->fetch();
         
         //Prepare the return results.
-        $transaction = array ('date' => $transaction_date, 'amount' =>  $transaction_info['amount'], 'status'=>$status ,
+        $transaction = array ('submission_date' => $transaction_date, 'amount' =>  $transaction_info['amount'], 'status'=>$status ,
         'service_description'=>$services['service_description'], 'first_name'=> $user_info['first_name'], 'middle_name'=> $user_info['middle_name'],   
         'last_name'=> $user_info['last_name'], 'address_line1'=>$address['address_line1'], 
         'city'=>$address['city'], 'state'=>$address['state'], 'zip_code'=>$address['zip_code']);

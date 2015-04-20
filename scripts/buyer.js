@@ -68,13 +68,22 @@ function createDataGridUI(grid_id,response)
     datafields:
     [
       {
-        name: 'Date', map: 'date'
+        name: 'submission_date', map: 'submission_date'
       },
       {
-        name: 'Amount', map: 'amount'
-      } ,
+        name: 'service_type', map: 'service_description'
+      },
       {
-        name: 'Status', map: 'status'
+        name: 'customer_type', map: 'customer_type'
+      },
+      {
+        name: 'contract_type', map: 'contract_type'
+      },
+      {
+        name: 'job_location', map: 'job_location'
+      },
+      {
+        name: 'job_date', map: 'job_date'
       }
     ]
   };
@@ -90,9 +99,12 @@ function createDataGridUI(grid_id,response)
       source: dataAdapter,
       columns: 
       [
-        { text: 'Date', datafield: 'Date', width: 150 },
-        { text: 'Amount', datafield: 'Amount', width: 100 },
-        { text: 'Status', datafield: 'Status', width: 100 }
+        { text: 'Submission Date', datafield: 'submission_date', width: 150 },
+        { text: 'Customer Type', datafield: 'customer_type', width: 110 },
+        { text: 'Service Type', datafield: 'service_type', width: 300 },
+        { text: 'Contract Type', datafield: 'contract_type', width: 110 },
+        { text: 'Job Location', datafield: 'job_location', width: 110 },
+        { text: 'Job Date', datafield: 'job_date', width: 150 }
       ]
     }
   );
@@ -130,68 +142,71 @@ function signOut()
 //manipulated safely by JavaScipt.
 $(document).ready
 ( 
-  loadScript
-  (
-    'scripts/common.js', 
-    function ()
-    {
-      $( "#datepicker1, #datepicker2").datepicker();
-      
-      $("#ProfileID").click
-      (
-        function()
-        {
-          window.location.href="buyer/profile.html";
-        }
-      )
-      
-      $("#BuyID").click
-      (
-        function()
-        {
-          window.location.href="buyer/buy.html";
-        }
-      )
-      
-      $("#HistoryID").click
-      (
-        function()
-        {
-          window.location.href="buyer/history.html";
-        }
-      )
-      
-      $("#ReviewsID").click
-      (
-        function()
-        {
-          window.location.href="buyer/ratings_and_reviews.html";
-        }
-      )
-      
-      $("#CancelRequestID, #RequestDetailsID, #JobDetailsID, #CancelJobID").click
-      (
-        function ()
-        {
-          alert("Not implemented yet. Click on \"Profile, Buy, History, reviews, Main or Logout Button\" button.");
-        }
-      ); 
-      
-      $("#RequestDetailsID").click
-      ( 
-        function() 
-        {
-          var rowindex = $('#jqxgrid1').jqxGrid('getselectedrowindex');
-        }
-      );
-      
-      //Get the open transaction history.
-      getActiveRequests("#jqxgrid1","open");
-      
-      //Get the waiting completion transaction history.
-      getActiveRequests("#jqxgrid2","waiting");
- 
-    }
-  )
+  function ()
+  {
+    loadScript
+    (
+      'scripts/common.js', 
+      function ()
+      {
+        $( "#datepicker1, #datepicker2").datepicker();
+        
+        $("#ProfileID").click
+        (
+          function()
+          {
+            window.location.href="buyer/profile.html";
+          }
+        )
+        
+        $("#BuyID").click
+        (
+          function()
+          {
+            window.location.href="buyer/buy.html";
+          }
+        )
+        
+        $("#HistoryID").click
+        (
+          function()
+          {
+            window.location.href="buyer/history.html";
+          }
+        )
+        
+        $("#ReviewsID").click
+        (
+          function()
+          {
+            window.location.href="buyer/ratings_and_reviews.html";
+          }
+        )
+        
+        $("#CancelRequestID, #RequestDetailsID, #JobDetailsID, #CancelJobID").click
+        (
+          function ()
+          {
+            alert("Not implemented yet. Click on \"Profile, Buy, History, reviews, Main or Logout Button\" button.");
+          }
+        ); 
+        
+        $("#RequestDetailsID").click
+        ( 
+          function() 
+          {
+            var rowindex = $('#jqxgrid1').jqxGrid('getselectedrowindex');
+          }
+        );
+        
+        //Get the open transaction history.
+        getActiveRequests("#jqxgrid1","open");
+        
+        //Get the waiting completion transaction history.
+        getActiveRequests("#jqxgrid2","waiting");
+   
+      }
+    )
+  }
 );
   

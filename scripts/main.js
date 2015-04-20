@@ -18,9 +18,12 @@
            // scope: 'additional_scope'
           }
         );
-        
+           try {
+        window.setTimeout(function () {
+        attachSignin(document.getElementById('customBtn'))}, 10);}catch (e) { alert(e.message); }
+   
         //Attach the "Sign In" handler to custom Google button. 
-        attachSignin(document.getElementById('customBtn'));
+        //attachSignin(document.getElementById('customBtn'));
       }
     );
   };
@@ -81,7 +84,17 @@
   //Send the AJAX login request.
   function sendLoginRequest(googleUser)
   {
+    //Get the user's Google profile.
     var profile = googleUser.getBasicProfile();
+    
+    //Get the user's ID.
+    user_id = profile.getId();
+    
+    //Get the user's email address.
+    user_email = profile.getEmail();
+
+    //Get the user's display name.
+    user_name = profile.getName();
     
     $.ajax 
     (
@@ -90,8 +103,10 @@
         url: "php/login.php",
         data: 
         {
-          username: $("#username").val(),                   
-          password: $("#password").val()
+          userid: user_id,
+          username: user_email,
+          displayname: user_name,           
+          
         },
         dataType: "json",
         success: sendLoginRequest_successCallback,
