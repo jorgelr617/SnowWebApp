@@ -65,27 +65,27 @@ function insertBuyInfo_errorCallback(data, status, xhr)
 }
 
 //Send the delete transactions history request.
-function deleteBuyInfo(submission_date_val)
+function cancelBuyRequest(submission_date_val)
 {
 
   $.ajax 
   (
     {
       type: "POST",
-      url: "../php/deleteBuyInfo.php",
+      url: "../php/cancelBuyRequest.php",
       data: 
         {
           submission_date:submission_date_val, 
         },
       dataType: "json",
-      success: deleteBuyInfo_successCallback,
-      error: deleteBuyInfo_errorCallback
+      success: cancelBuyRequest_successCallback,
+      error: cancelBuyRequest_errorCallback
     }
   );
 }
 
 //Success delete request callback.
-function deleteBuyInfo_successCallback(data, status, xhr) 
+function cancelBuyRequest_successCallback(data, status, xhr) 
 {
   if(data.response == "success")
     //Get the open transaction history.
@@ -95,7 +95,7 @@ function deleteBuyInfo_successCallback(data, status, xhr)
 }
 
 //Error delete request callback.
-function deleteBuyInfo_errorCallback(data, status, xhr) 
+function cancelBuyRequest_errorCallback(data, status, xhr) 
 {
   //Display error messages.
   showErrorDialog(data); 
@@ -128,14 +128,14 @@ function getOpenRequests_successCallback(data, status, xhr)
   }
   else
     //Clear the page state.
-    clear_state();
+    clear_state(data);
 }
 
 //Error get transactions history callback.
 function getOpenRequests_errorCallback(data, status, xhr) 
 {
   //Clear the page state.
-  clear_state();
+  clear_state(data);
 }
 
 //Create the data grid UI.
@@ -201,19 +201,21 @@ function populate_state(data)
 }
 
 //Clear all the data fields in the page.
-function clear_state()
+function clear_state(data)
 {
   //Create JSON object to clear page state.
-  data = 
+  empty_data = 
   {
-   Date: " ",
-   Amount: " ",
-   Status: " "
+    submission_date: " ",
+    customer_type: "",
+    service_type: " ",
+    contract_type: " ",
+    job_location: " ",
+    job_date: " "
   };
   
   //Clear the data grid UI.
-  createDataGridUI ("#jqxgrid1",data);
-  createDataGridUI ("#jqxgrid2",data);
+  createDataGridUI (data.grid_id, empty_data);
   
 }
 
@@ -278,14 +280,14 @@ $(document).ready
           }
         );
         
-        $("#DeleteID").click
+        $("#CancelID").click
         (
           function ()
           {
             
             var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
             var submission_date = $("#jqxgrid1").jqxGrid('getcellvalue', index, "submission_date");
-            deleteBuyInfo(submission_date);
+            cancelBuyRequest(submission_date);
           }
         );
         

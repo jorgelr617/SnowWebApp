@@ -41,6 +41,17 @@
     <!-- Add a browser tab icon, a snowflake. -->
     <link rel="shortcut icon" href="../images/Snowflake.ico">
     
+    <!-- Add the jQWidgets framework and widgets. -->
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxgrid.selection.js"></script>
+    
+    <!-- Add one of the jQWidgets styles. -->
+    <link rel="stylesheet" href="../scripts/jqwidgets-ver3.7.1/jqwidgets/styles/jqx.base.css" type="text/css" />
+    
   </head>
   
   <body>
@@ -83,9 +94,8 @@
         
         <div class="text_panel">
           <Span class = "Span_Text">Search Results:</Span><br>
-          <textarea >
-            Search Results!
-          </textarea>
+          <div id="jqxgrid1">
+          </div>
           <br>
         </div>
         
@@ -98,9 +108,8 @@
         
         <div class="text_panel">
           <Span class = "Span_Text">Offers Made:</Span><br>
-          <textarea >
-            Offers made!
-          </textarea>
+          <div id="jqxgrid2">
+          </div>
           <br>
           <button style="display:block; margin-left:auto; margin-right:auto" class="large_button" id="CancelID" type="submit">Cancel</button>
         </div>

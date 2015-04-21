@@ -22,19 +22,19 @@ function loadScript(script_url,callback)
   );    
 }
 
-//Disable Credit Card information.
-function toggleCreditCardInfo(state) 
+//Disable/enable the Credit Card information.
+function toggleCreditCardInfo(state)
 {
-  //Check the name on the credit card.
+  //Toggle the name on the credit card.
   $("#NameOnCreditCardID").prop('disabled', state);
   
-  //Check the credit card number.
+  //Toggle the credit card number.
   $("#CreditCardNumberID").prop('disabled', state);
   
-  //Check the expiry.
+  //Toggle the expiry.
   $("#datepicker").prop('disabled', state);
   
-  //Check the security code.
+  //Toggle the security code.
   $("#SecurityCodeID").prop('disabled', state);
 }
 
@@ -45,7 +45,7 @@ function check_profile_inputs()
   var temp = $("#FirstNameID").val();
   if (temp.trim() == '')
   {
-    showErrorMessage ("Profile Error: First name must not be empty!");
+    displayErrorMessage("Profile Error: First name must not be empty!");
     
     return false;
   }
@@ -54,16 +54,16 @@ function check_profile_inputs()
   var temp = $("#LastNameID").val();
   if (temp.trim() == '')
   {
-    showErrorMessage ("Profile Error: Last name must not be empty!");
+    displayErrorMessage("Profile Error: Last name must not be empty!");
     
     return false;
   }
-
+  
   //Check the address.
   var temp = $("#AddressID").val();
   if (temp.trim() == '')
   {
-    showErrorMessage ("Profile Error: Address must not be empty!");
+    displayErrorMessage("Profile Error: Address must not be empty!");
     
     return false;
   }
@@ -73,12 +73,12 @@ function check_profile_inputs()
   if (temp.trim() != 'Credit Card')
     //Done. Don't continue.
     return true;
-   
+  
   //Check the name on the credit card.
   temp = $("#NameOnCreditCardID").val();
   if (temp.trim() == '')
   {
-    showErrorMessage ("Profile Error: Name on credit card must not be empty!");
+    displayErrorMessage("Profile Error: Name on credit card must not be empty!");
     
     return false;
   }
@@ -87,7 +87,7 @@ function check_profile_inputs()
   temp = $("#CreditCardNumberID").val();
   if (temp.trim() == '')
   {
-    showErrorMessage ("Profile Error: Credit card number must not be empty!");
+    displayErrorMessage("Profile Error: Credit card number must not be empty!");
     
     return false;
   }
@@ -96,7 +96,7 @@ function check_profile_inputs()
   temp = $("#datepicker").val();
   if (temp.trim() == '')
   {
-    showErrorMessage ("Profile Error: Expiry must not be empty!");
+    displayErrorMessage("Profile Error: Expiry must not be empty!");
     
     return false;
   }
@@ -105,7 +105,7 @@ function check_profile_inputs()
   temp = $("#SecurityCodeID").val();
   if (temp.trim() == '')
   {
-    showErrorMessage ("Profile Error: Security code must not be empty!");
+    displayErrorMessage("Profile Error: Security code must not be empty!");
     
     return false;
   }
@@ -114,37 +114,39 @@ function check_profile_inputs()
   return true;
 }
 
-//Send the get transactions history request.
+//Send the submit profile request.
 function submitProfile(data_grid_id,status_state) 
 {
   //Check the profile's inputs.
   var valid = check_profile_inputs();
   
-  //If the profile is valid, continue.
-  if (valid == true)
-  {
-    $.ajax 
-    (
-      {
-        type: "POST",
-        url: "../php/insertProfileInfo.php",
-        data: 
-          {
-             first_name: $("#FirstNameID").val(), 
-             last_name: $("#LastNameID").val(),
-             address_line1: $("#AddressID").val(),
-             payment_method_name: $("#PaymentMethodID option:selected").text(),
-             credit_card_full_name: $("#NameOnCreditCardID").val()
-          },
-        dataType: "json",
-        success: submitProfile_successCallback,
-        error: submitProfile_errorCallback
-      }
-    );
-  }
+  //If the profile's inputs are not valid,
+  //don't continue.
+  if (valid != true)
+    return;
+   
+  $.ajax 
+  (
+    {
+      type: "POST",
+      url: "../php/insertProfileInfo.php",
+      data: 
+        {
+           first_name: $("#FirstNameID").val(), 
+           last_name: $("#LastNameID").val(),
+           address_line1: $("#AddressID").val(),
+           payment_method_name: $("#PaymentMethodID option:selected").text(),
+           credit_card_full_name: $("#NameOnCreditCardID").val()
+        },
+      dataType: "json",
+      success: submitProfile_successCallback,
+      error: submitProfile_errorCallback
+    }
+  );
+  
 }
 
-//Success get transactions history callback.
+//Success submit profile callback.
 function submitProfile_successCallback(data, status, xhr) 
 {
   if(data.response == "success")
@@ -155,11 +157,12 @@ function submitProfile_successCallback(data, status, xhr)
     showErrorDialog(data);
 }
 
-//Error get transactions history callback.
+//Error submit profile callback.
 function submitProfile_errorCallback(data, status, xhr) 
 {
   showErrorDialog(data); 
 }
+
 
 //Execute when the page can be 
 //manipulated safely by JavaScipt.

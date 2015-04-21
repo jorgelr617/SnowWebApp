@@ -10,6 +10,7 @@
   else
     $relative_path = $_POST['relative_path'];
   
+  //Create the returned path.
   $path = 'main.html';
   if ($relative_path == 'true')
     $path = '../main.html';
@@ -17,7 +18,7 @@
   //Ensure the user is actually logged in.
   if (!(isset($_SESSION['login']) && $_SESSION['login'] != '')) 
   {
-    header ("Location: " . "tom.html", true, 302);
+    header ("Location: ../main.html", true, 302);
     exit();
   }
   

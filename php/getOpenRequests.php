@@ -80,7 +80,7 @@
     else 
     { 
       //Prepare the return results.
-      $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>"No results found!");
+      $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>"No results found!", 'grid_id'=>$grid_id);
     }
     
     //Encode the return results.

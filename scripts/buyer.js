@@ -22,15 +22,19 @@ function loadScript(script_url,callback)
   );    
 }
 
-//Send the get transactions history request.
-function getActiveRequests(grid_id_num,status_state) 
+//Send the get active requests.
+function getActiveRequests(grid_id_val,status_val) 
 {
   $.ajax 
   (
     {
       type: "POST",
       url: "php/getActiveRequests.php",
-      data: {status:status_state, grid_id:grid_id_num},
+      data: 
+        {
+          status:status_val, 
+          grid_id:grid_id_val
+        },
       dataType: "json",
       success: getActiveRequests_successCallback,
       error: getActiveRequests_errorCallback
@@ -38,7 +42,7 @@ function getActiveRequests(grid_id_num,status_state)
   );
 }
 
-//Success get transactions history callback.
+//Success get active requests callback.
 function getActiveRequests_successCallback(data, status, xhr) 
 {
   if(data.response == "success")
@@ -50,13 +54,13 @@ function getActiveRequests_successCallback(data, status, xhr)
     showErrorDialog(data.msg);
 }
 
-//Error get transactions history callback.
+//Error get active requests callback.
 function getActiveRequests_errorCallback(data, status, xhr)
 {
   showErrorDialog("An unknown error was encountered."); 
 }
 
-//Create the grid UI.
+//Create the data grid UI.
 function createDataGridUI(grid_id,response) 
 {
  
@@ -88,9 +92,8 @@ function createDataGridUI(grid_id,response)
     ]
   };
   
-  //Add data adapter.
+  //Construct the data GUI grid.
   var dataAdapter = new $.jqx.dataAdapter(source);
-  
   $(grid_id).jqxGrid
   (
     {
@@ -187,6 +190,7 @@ $(document).ready
         (
           function ()
           {
+            showErrorDialog("test!!!!!");
             alert("Not implemented yet. Click on \"Profile, Buy, History, reviews, Main or Logout Button\" button.");
           }
         ); 
@@ -196,13 +200,14 @@ $(document).ready
           function() 
           {
             var rowindex = $('#jqxgrid1').jqxGrid('getselectedrowindex');
+            alert("Not implemented yet. Click on \"Profile, Buy, History, reviews, Main or Logout Button\" button.");
           }
         );
         
-        //Get the open transaction history.
+        //Get the open requests.
         getActiveRequests("#jqxgrid1","open");
         
-        //Get the waiting completion transaction history.
+        //Get the waiting completion requests.
         getActiveRequests("#jqxgrid2","waiting");
    
       }

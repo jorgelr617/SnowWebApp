@@ -41,6 +41,17 @@
     <!-- Add a browser tab icon, a snowflake. -->
     <link rel="shortcut icon" href="../images/Snowflake.ico">
     
+    <!-- Add the jQWidgets framework and widgets. -->
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="../scripts/jqwidgets-ver3.7.1/jqwidgets/jqxgrid.selection.js"></script>
+    
+    <!-- Add one of the jQWidgets styles. -->
+    <link rel="stylesheet" href="../scripts/jqwidgets-ver3.7.1/jqwidgets/styles/jqx.base.css" type="text/css" />
+    
   </head>
   
   <body>
@@ -55,9 +66,8 @@
       
        <div class="text_panel">
          <Span class = "Span_Text">Sales History</Span><br>
-         <textarea class = "Textarea2" >
-           Sales History!
-         </textarea>
+         <div id="jqxgrid1">
+         </div>
          <br>
        </div>
        <div class="button_panel">
@@ -74,23 +84,23 @@
         
         <div class="button_panel">
           <span class="Span_Fixed">Buyer:</span>
+          <span id="SellerID"></span>
         </div>
         <div class="button_panel">
           <span class="Span_Fixed">Ratings:</span>
-          
+          <span id="RatingsID"></span>
         </div>
         <div class="button_panel">
           <span class="Span_Fixed">Job:</span>
-          
+          <span id="JobID"></span>
         </div>
         <div class="button_panel">
           <span class="Span_Fixed">Date:</Span>
-          
+          <span id="DateID"></span>
         </div>
         <div class="text_panel">
           <Span class = "Span_Text">Reviews:</Span><br>
-          <textarea >
-            Seller review comments!
+          <textarea id="ReviewsID">
           </textarea>
           <br>
         </div>

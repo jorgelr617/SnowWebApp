@@ -2,13 +2,14 @@
   
   session_start();
   
-  //Initialize variables.
+  //Initialize the variables.
   $_SESSION['login'] = "0";
   $_SESSION['userid'] = "";
   $_SESSION['username'] = "";
   $_SESSION['user_type'] = "consumer";
   
-  //Check the username.
+  //Check that the username is defined 
+  //(which is the user's Google email address.)
   if (!isset($_POST['username']))
   {
     //Prepare and encode the return results.
@@ -19,13 +20,8 @@
     exit();
   }
   
-  //Get the username information.
-  $username = $_POST['username'];
-  $userid = $_POST['userid'];
-  $displayname = $_POST['displayname'];
-  
   //Check that the username is not empty.
-  if (trim($username) == '') 
+  if (trim($_POST['username']) == '')
   {
     //Prepare and encode the return results.
     $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>'Empty username.');
@@ -34,6 +30,11 @@
     //Don't continue.
     exit();
   }
+  
+  //Extract the user's information.
+  $username = $_POST['username'];
+  $userid = $_POST['userid'];
+  $displayname = $_POST['displayname'];
   
   try
   {
@@ -49,9 +50,8 @@
     //Check that it retuned a match.
     if ( count($records) >= 1 )
     {
-      
       //Find a user match.
-      if (strcmp($username, $records["username"]) == 0)
+      if ($username == $records["username"])
       {
         $_SESSION['login'] = "1";
         $_SESSION['userid'] = $userid;
@@ -59,8 +59,20 @@
         $_SESSION['displayname'] = $displayname;
         $_SESSION['user_type'] = "consumer";
         
+        //Extract the user type.
+        $user_type = $_SESSION['user_type'];
+        
+        //Identify the user type to redirect the
+        //user to the correct page.
+        $page = 'buyer.html';
+        if($user_type == "seller")
+          $page = 'seller.html';
+        else
+          if($user_type == "administrator")
+            $page = 'administrator.html';
+        
         //Prepare the return results.
-        $arr = array ('response'=>'success', 'URL'=>'buyer.html','msg'=>'Logged in.');
+        $arr = array ('response'=>'success', 'URL'=>$page,'msg'=>'Logged in.');
       }
       else
       {

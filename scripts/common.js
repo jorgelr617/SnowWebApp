@@ -1,7 +1,7 @@
 /* JavaScipt file for common unities file. */
 
   //Create the "Error" jQuery dialog.
-  $("#ErrorDialogID").dialog
+  $("#DialogID").dialog
   (
     {
       buttons: 
@@ -29,25 +29,42 @@
       else
         message = "Web App Error: <br>" + data.msg;
     
-    var err_msg = "<span id=\"ErrorID\">" + message + "</span>";
+    var err_msg = "<span id=\"MessageID\">" + message + "</span>";
     
-    $("#ErrorID").html(err_msg);
-    $("#ErrorDialogID").dialog("open");
+    $("#DialogID").dialog('option', 'title', 'ERROR');
+    $("#MessageID").html(err_msg);
+    $("#DialogID").dialog("open");
+    
   }
   
-  //Open the "Error" jQuery dialog when
-  //there is an error.
-  function showErrorMessage(message)
+  //Display an error message in the dialog.
+  function displayErrorMessage(user_message)
   {
-    if ((typeof message == 'undefined') || (message == null))
+    if ((typeof user_message == 'undefined') || (user_message == null))
       msg = "Unknown error.";
     else
-      msg = message;
+      msg = user_message;
     
-    var err_msg = "<span id=\"ErrorID\">" + msg + "</span>";
+    var err_msg = "<span id=\"MessageID\">" + msg + "</span>";
     
-    $("#ErrorID").html(err_msg);
-    $("#ErrorDialogID").dialog("open");
+    $("#DialogID").dialog('option', 'title', 'ERROR');
+    $("#MessageID").html(err_msg);
+    $("#DialogID").dialog("open");
+  }
+  
+  //Display a notice message in the dialog.
+  function displayNoticeMessage(user_message)
+  {
+    if ((typeof user_message == 'undefined') || (user_message == null))
+      msg = "Unknown error.";
+    else
+      msg = user_message;
+    
+    var notice_msg = "<span id=\"MessageID\">" + msg + "</span>";
+    
+    $("#DialogID").dialog('option', 'title', 'NOTICE');
+    $("#MessageID").html(notice_msg);
+    $("#DialogID").dialog("open");
   }
   
   //Logout from the web application.

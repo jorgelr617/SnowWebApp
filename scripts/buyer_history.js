@@ -28,6 +28,7 @@ function getTransactionsHistory(data_grid_id,status_state)
  
   //Get the from date.
   date1 = $("#datepicker1").val();
+  
   //Get the to date.
   date2 = $("#datepicker2").val();
   
@@ -38,21 +39,22 @@ function getTransactionsHistory(data_grid_id,status_state)
       url: "../php/getTransactionsHistory.php",
       data: {status:status_state, grid_id:data_grid_id, date_from:date1, date_to:date2},
       dataType: "json",
-      success: successCallback,
-      error: errorCallback
+      success: getTransactionsHistory_successCallback,
+      error: getTransactionsHistory_errorCallback
     }
   );
 }
 
-var page_state;
+//The purchase history.
+var purchase_history;
 
 //Success get transactions history callback.
-function successCallback(data, status, xhr) 
+function getTransactionsHistory_successCallback(data, status, xhr) 
 {
   if(data.response == "success")
   {
     //Populate the page state.
-    page_state = data;
+    purchase_history = data;
     populate_state(data,0);
   }
   else
@@ -61,7 +63,7 @@ function successCallback(data, status, xhr)
 }
 
 //Error get transactions history callback.
-function errorCallback(data, status, xhr) 
+function getTransactionsHistory_errorCallback(data, status, xhr) 
 {
   //Clear the page state.
   clear_state(); 
@@ -82,18 +84,25 @@ function createDataGridUI(grid_id,response)
         name: 'submission_date', map: 'submission_date'
       },
       {
-        name: 'Amount', map: 'amount'
+        name: 'service_type', map: 'service_description'
       },
       {
-        name: 'Status', map: 'status'
+        name: 'customer_type', map: 'customer_type'
+      },
+      {
+        name: 'contract_type', map: 'contract_type'
+      },
+      {
+        name: 'job_location', map: 'job_location'
+      },
+      {
+        name: 'job_date', map: 'job_date'
       }
     ]
   };
   
-  //Add data adapter.
+  //Construct the data GUI grid.
   var dataAdapter = new $.jqx.dataAdapter(source);
-  
-  //Bind the data grid UI.
   $(grid_id).jqxGrid
   (
     {
@@ -103,8 +112,11 @@ function createDataGridUI(grid_id,response)
       columns: 
       [
         { text: 'Submission Date', datafield: 'submission_date', width: 150 },
-        { text: 'Amount', datafield: 'Amount', width: 100 },
-        { text: 'Status', datafield: 'Status', width: 100 }
+        { text: 'Customer Type', datafield: 'customer_type', width: 110 },
+        { text: 'Service Type', datafield: 'service_type', width: 300 },
+        { text: 'Contract Type', datafield: 'contract_type', width: 110 },
+        { text: 'Job Location', datafield: 'job_location', width: 110 },
+        { text: 'Job Date', datafield: 'job_date', width: 150 }
       ]
     }
   );
@@ -116,11 +128,11 @@ function populate_state(data, index)
   //Create the data grid UI.
   createDataGridUI (data.grid_id,data.msg);
   
-  //Fill out the data fields.
+  //Fill out the labels.
   populate_selected(data, index);
 }
 
-//Populate selected labels in the page.
+//Populate labels in the page based on selected grid row.
 function populate_selected(data, index)
 { 
 
@@ -142,13 +154,16 @@ function clear_state()
   //Create JSON object to clear page state.
   data = 
   {
-   submission_date: " ",
-   Amount: " ",
-   Status: " "
+    submission_date: " ",
+    customer_type: "",
+    service_type: " ",
+    contract_type: " ",
+    job_location: " ",
+    job_date: " "
   };
   
   //Clear the data grid UI.
-  createDataGridUI ("#jqxgrid3",data);
+  createDataGridUI ("#jqxgrid1",data);
     
   //Clear out the data fields.
   $("#JobID").text(" ");
@@ -183,29 +198,30 @@ $(document).ready
           }
         )
         
-        //Refresh the transaction history.
+        //Refresh the transactions history.
         $("#datepicker1, #datepicker2").change
         (
           function()
           {
-            //Get the transaction history.
-            getTransactionsHistory("#jqxgrid3","closed");
+            //Get the transactions history.
+            getTransactionsHistory("#jqxgrid1","closed");
           }
         )
         
-        $("#jqxgrid3").click
+        $("#jqxgrid1").click
         ( 
           function() 
-          {
-            var index = $('#jqxgrid3').jqxGrid('getselectedrowindex');
+          { 
+            //Get the grid's selected row.
+            var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
             
             //Fill out the data fields.
-            populate_selected(page_state,index);
+            populate_selected(purchase_history,index);
           }
         );
         
-        //Get the closed transaction history.
-        getTransactionsHistory("#jqxgrid3","closed");
+        //Get the closed transactions history.
+        getTransactionsHistory("#jqxgrid1","closed");
         
       }
     )
