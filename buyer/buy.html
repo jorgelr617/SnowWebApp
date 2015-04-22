@@ -127,16 +127,34 @@
           <button class="small_button Button_Align" id="Delete2ID" type="submit" value="Delete">Delete</button>
           <button class="small_button Button_Align" id="PurchaseID" type="submit" value="Purchase">Purchase</button>
           
-          <a id="PaypalID" data-paypal-button="true">
-            <img  src="//www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif" alt="Check out with PayPal" />
-          </a>
-          
-        </div>
+
+          </div>
+
+
         
-      </div>
+
+<form name="_xclick" target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_cart">
+<input type="hidden" name="business" value="snowwebapp-facilitator@gmail.com">
+<input type="hidden" name="currency_code" value="US">
+<input type="hidden" name="item_name" value="HTML book">
+<input type="hidden" name="amount" value="24.99">
+<input type="image" src="http://www.paypal.com/en_GB/i/btn/sc-but-01.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+<input type="hidden" name="add" value="1">
+</form>
+
+  <form name="_xclick" target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_cart">
+<input type="hidden" name="business" value="snowwebapp-facilitator@gmail.com">
+<input type="image" src="https://www.paypal.com/en_GB/i/btn/view_cart.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+<input type="hidden" name="display" value="1">
+</form>      
+        
+    
       
     </div>
     
+    </div>
     <div class="all_panels bottom_panel">
     
       <button class="medium_button" id="MainID" type="submit" value="Main">Main</button>

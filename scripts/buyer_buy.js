@@ -226,7 +226,7 @@ function sendPayPalRequest()
   (
     {
       type: "POST",
-      url: "../php/paypal.php",
+      url: "../php/paypal_1.php",
       dataType: "json",
       success: sendPayPalRequest_successCallback,
       error: sendPayPalRequest_errorCallback
