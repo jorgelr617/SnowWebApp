@@ -133,12 +133,12 @@
 
         
 
-<form name="_xclick" target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+<form  id="AddButtonID" name="_xclick" target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
 <input type="hidden" name="cmd" value="_cart">
 <input type="hidden" name="business" value="snowwebapp-facilitator@gmail.com">
 <input type="hidden" name="currency_code" value="US">
 <input type="hidden" name="item_name" value="HTML book">
-<input type="hidden" name="amount" value="24.99">
+<input id="AddICartID" type="hidden" name="amount" value="24.99">
 <input type="image" src="http://www.paypal.com/en_GB/i/btn/sc-but-01.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
 <input type="hidden" name="add" value="1">
 </form>

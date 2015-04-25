@@ -115,7 +115,7 @@
         $transaction = array ('submission_date' => $transaction_date, 'amount' =>  $transaction_info['amount'], 'status'=>$status ,
         'service_description'=>$services['service_description'], 'first_name'=> $user_info['first_name'], 'middle_name'=> $user_info['middle_name'],   
         'last_name'=> $user_info['last_name'], 'address_line1'=>$address['address_line1'], 
-        'city'=>$address['city'], 'state'=>$address['state'], 'zip_code'=>$address['zip_code'], 'stars'=>$ratings_and_reviews['stars'], 
+        'city'=>$address['city'], 'state'=>$address['state'], 'zip_code'=>$address['zip_code'], 'rating'=>$ratings_and_reviews['rating'], 
         'review'=>$ratings_and_reviews['review'],);
         
         //Create the transactions list.

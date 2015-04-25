@@ -291,6 +291,17 @@ $(document).ready
           }
         );
         
+        $("#AddButtonID").click
+        (
+          function ()
+          {
+            
+            var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
+            var submission_date = $("#jqxgrid1").jqxGrid('getcellvalue', index, "submission_date");
+            $("#AddICartID").prop('value','7777');
+          }
+        );
+        
         $("#AddID, #Delete2ID, #PurchaseID").click
         (
           function ()
@@ -306,7 +317,7 @@ $(document).ready
           {
             sendPayPalRequest();
           }
-        )
+        );
         
         //Get the open transaction history.
         getOpenRequests("#jqxgrid1","open");

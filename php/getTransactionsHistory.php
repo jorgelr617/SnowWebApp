@@ -44,8 +44,6 @@
     $stmt->bindParam(3, $date_to);
     $stmt->execute();
     $records = $stmt->fetchAll();
-    
-    //Close the database connection.
     $stmt->closeCursor();
     
     //Create the transactions history.

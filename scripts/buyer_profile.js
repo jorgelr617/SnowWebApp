@@ -51,7 +51,7 @@ function check_profile_inputs()
   }
   
   //Check the last name.
-  var temp = $("#LastNameID").val();
+  temp = $("#LastNameID").val();
   if (temp.trim() == '')
   {
     displayErrorMessage("Profile Error: Last name must not be empty!");
@@ -60,7 +60,7 @@ function check_profile_inputs()
   }
   
   //Check the address.
-  var temp = $("#AddressID").val();
+  temp = $("#AddressID").val();
   if (temp.trim() == '')
   {
     displayErrorMessage("Profile Error: Address must not be empty!");
@@ -110,6 +110,16 @@ function check_profile_inputs()
     return false;
   }
   
+  //Check the security code's length.
+  temp = $("#SecurityCodeID").val();
+  if (temp.length != 3)
+  {
+    displayErrorMessage("Profile Error: Security code must be 3 digits!");
+    
+    return false;
+  }
+  
+  
   //Done.
   return true;
 }
@@ -136,7 +146,10 @@ function submitProfile(data_grid_id,status_state)
            last_name: $("#LastNameID").val(),
            address_line1: $("#AddressID").val(),
            payment_method_name: $("#PaymentMethodID option:selected").text(),
-           credit_card_full_name: $("#NameOnCreditCardID").val()
+           credit_card_full_name: $("#NameOnCreditCardID").val(),
+           credit_card_number: $("#CreditCardNumberID").val(),
+           expiry: $("#datepicker").val(),
+           security_code: $("#SecurityCodeID").val()
         },
       dataType: "json",
       success: submitProfile_successCallback,
@@ -151,7 +164,7 @@ function submitProfile_successCallback(data, status, xhr)
 {
   if(data.response == "success")
   {
-    showErrorDialog(data);
+    displayNoticeMessage("Profile submitted successfully.");
   }
   else
     showErrorDialog(data);
@@ -175,7 +188,7 @@ $(document).ready
       '../scripts/common.js',
       function()
       {
-        $( "#datepicker").datepicker();
+        $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd'});
         
         $("#PaymentMethodID").change
         ( 
@@ -201,7 +214,7 @@ $(document).ready
           {
             window.location.href="../buyer.html";
           }
-        )
+        );
         
         $("#SubmitID").click
         ( 
@@ -210,6 +223,65 @@ $(document).ready
             submitProfile();
           }
         ); 
+        
+        //#1- Force the user to only enter digits in the security code and credit card number.
+        //Source code based on: http://stackoverflow.com/questions/13952686/how-to-make-html-input-tag-only-accept-numerical-values   
+        $("#SecurityCodeID, #CreditCardNumberID").on
+        (
+          'keydown keyup',
+          function isNumberic(evt)
+          {
+            //Get the character entered.
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            
+            //Determine whether the character entered is numeric.
+            if ((charCode > 47) && (charCode < 58) && (event.shiftKey == false))
+              return true;
+             
+            //Determine whether the character entered is numeric, 
+            //from the number pad.
+            if ((charCode > 95) && (charCode < 106))
+              return true;
+            
+            //Allow necessary special characters, like backspace, delete and left or right arrows
+            //that are necessary for navigating through the text field.
+            if ((charCode == 8) || (charCode == 46) || (charCode == 37) || (charCode == 39))
+              return true;
+             
+            //Done. The character entered is not numeric.
+            return false;
+          }
+        ); 
+        
+        //Force the user to only enter valid characters in a name, like the first and last name, 
+        //and the name on the credit card. Source code is based on code from #1.
+        $("#FirstNameID, #LastNameID, #NameOnCreditCardID").on
+        (
+          'keydown keyup',
+          function isValidName(evt)
+          {
+            //Get the character entered.
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            
+            //Determine whether the character entered is a letter in the alphabet.
+            if (((charCode > 64) && (charCode < 91)) || ((charCode > 96) && (charCode < 123)))
+              return true;
+            
+            //Allow other characters that can appear in names, like hyphen, apostrophe or period.
+            if ((charCode == 189) && (charCode < 22) && (charCode < 190))
+              return true;
+            
+            //Allow necessary special characters, like backspace, delete and left or right arrows
+            //that are necessary for navigating through the text field.
+            if ((charCode == 8) || (charCode == 46) || (charCode == 37) || (charCode == 39))
+              return true;
+            
+            //Done. The character entered is not 
+            //a valid character in a person's name.
+            return false;
+          }
+        ); 
+        
       }
     )
   }

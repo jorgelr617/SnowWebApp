@@ -136,6 +136,13 @@
   width: 300px;
 }
 
+.Span_Fixed5
+{
+  display: inline-block;
+  width: 100px;
+}
+
+
 .Span_Text
 {
   display: inline-block;

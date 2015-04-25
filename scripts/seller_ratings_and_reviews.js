@@ -75,6 +75,57 @@ function getTransactionsHistory_errorCallback(data, status, xhr)
   clear_state(); 
 }
 
+
+//Send ratings and reviews request.
+function submitRatingsAndReview() 
+{
+ 
+  //Get the grid's selected submisison date.
+  var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
+  
+  //Ensure there is an item selected.
+  if ( (typeof index == 'undefined') || (index < 0))
+    //Don't continue.
+    return;
+  var submission_date_val = $("#jqxgrid1").jqxGrid('getcellvalue', index, "submission_date");
+  
+  $.ajax 
+  (
+    {
+      type: "POST",
+      url: "../php/setRatingsAndReview.php",
+      data: 
+        {
+          submission_date: submission_date_val,
+          rating: $("#RatingsID").prop("selectedIndex"),
+          review: $("#ReviewsID").val()
+        },
+      dataType: "json",
+      success: submitRatingsAndReview_successCallback,
+      error: submitRatingsAndReview_errorCallback
+    }
+  );
+}
+
+//Success ratings and reviews callback.
+function submitRatingsAndReview_successCallback(data, status, xhr) 
+{
+  if(data.response == "success")
+  {
+    //Display a confirmation message.
+    displayNoticeMessage("Ratings and reviews have been updated successfully!");
+  }
+  else
+    showErrorDialog(data);
+}
+
+//Error ratings and reviews  callback.
+function submitRatingsAndReview_errorCallback(data, status, xhr) 
+{
+  //Display the appropriate error message.
+  showErrorDialog(data);
+}
+
 //Create the data grid UI.
 function createDataGridUI(grid_id,response) 
 {
@@ -148,6 +199,9 @@ function populate_selected(data, index)
   $("#DateID").text(data.msg[index].submission_date);
   $("#ReviewsID").text(data.msg[index].review);
   
+   //Select the first row.
+  $('#jqxgrid1').jqxGrid('selectrow', 0);
+  
 }
 
 //Clear all the data fields in the page.
@@ -186,7 +240,7 @@ $(document).ready
       '../scripts/common.js',
       function()
       {
-        $( "#datepicker1, #datepicker2").datepicker();
+        $("#datepicker1, #datepicker2").datepicker();
 
         $("#MainID").click
         (
@@ -200,7 +254,8 @@ $(document).ready
         (
           function ()
           {
-            alert("Not implmenetd yet. Click on \"Main or Logout Button\" button.");
+            //Submit the ratings and reviews.
+            submitRatingsAndReview();
           }
         );
         

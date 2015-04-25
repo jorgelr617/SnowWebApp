@@ -19,6 +19,14 @@
       echo json_encode($arr);
     }
     
+    //Check that the service type parameter has been passed.
+    if (!(isset($_POST['payment_method_name'])) || (trim($_POST['payment_method_name']) == ''))
+    {
+      //Prepare and encode the return results.
+      $arr = array ('response'=>'error', 'msg'=>"error");
+      echo json_encode($arr);
+    }
+    
     //Include the database connection.
     include "database_connect.php";
     
@@ -47,11 +55,17 @@
     //Get the payment method information.
     $payment_method_name = $_POST['payment_method_name'];
     $credit_card_full_name = $_POST['credit_card_full_name'];
-    
+    $credit_card_number = $_POST['credit_card_number'];
+    $expiry = $_POST['expiry'];
+    $security_code = $_POST['security_code'];
+     
     //Insert the payment method information.
-    $stmt = $db->prepare("insert into payment_method(payment_method_name, credit_card_full_name) values (?,?)");
+    $stmt = $db->prepare("insert into payment_method(payment_method_name, credit_card_full_name, credit_card_number, expiry, security_code) values (?,?,?,?,?)");
     $stmt->bindParam(1, $payment_method_name);
     $stmt->bindParam(2, $credit_card_full_name);
+    $stmt->bindParam(3, $credit_card_number);
+    $stmt->bindParam(4, $expiry);
+    $stmt->bindParam(5, $security_code);
     $affected = $stmt->execute();
     $payment_method_lastId = $db->lastInsertId();
     $stmt->closeCursor();

@@ -75,6 +75,57 @@ function getTransactionsHistory_errorCallback(data, status, xhr)
   clear_state(); 
 }
 
+
+//Send ratings and reviews request.
+function submitRatingsAndReview() 
+{
+ 
+  //Get the grid's selected submisison date.
+  var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
+  
+  //Ensure there is an item selected.
+  if ( (typeof index == 'undefined') || (index < 0))
+    //Don't continue.
+    return;
+  var submission_date_val = $("#jqxgrid1").jqxGrid('getcellvalue', index, "submission_date");
+  
+  $.ajax 
+  (
+    {
+      type: "POST",
+      url: "../php/setRatingsAndReview.php",
+      data: 
+        {
+          submission_date: submission_date_val,
+          rating: $("#RatingsID").prop("selectedIndex"),
+          review: $("#ReviewsID").val()
+        },
+      dataType: "json",
+      success: submitRatingsAndReview_successCallback,
+      error: submitRatingsAndReview_errorCallback
+    }
+  );
+}
+
+//Success ratings and reviews callback.
+function submitRatingsAndReview_successCallback(data, status, xhr) 
+{
+  if(data.response == "success")
+  {
+    //Display a confirmation message.
+    displayNoticeMessage("Ratings and reviews have been updated successfully!");
+  }
+  else
+    showErrorDialog(data);
+}
+
+//Error ratings and reviews  callback.
+function submitRatingsAndReview_errorCallback(data, status, xhr) 
+{
+  //Display the appropriate error message.
+  showErrorDialog(data);
+}
+
 //Create the data grid UI.
 function createDataGridUI(grid_id,response) 
 {
@@ -143,10 +194,13 @@ function populate_selected(data, index)
 { 
   //Fill out the data fields.
   $("#SellerID").text(data.msg[index].first_name + " " + data.msg[index].middle_name + " " + data.msg[index].last_name);
-  $("#RatingsID").text(data.msg[index].stars);
+  $("#RatingsID").attr('selectedIndex', data.msg[index].rating);
   $("#JobID").text(data.msg[index].service_description);
   $("#DateID").text(data.msg[index].submission_date);
   $("#ReviewsID").text(data.msg[index].review);
+  
+  //Select the first row.
+  $('#jqxgrid1').jqxGrid('selectrow', 0);
   
 }
 
@@ -201,7 +255,8 @@ $(document).ready
         (
           function ()
           {
-            alert("Not implemented yet. Click on \"Main or Logout Button\" button.");
+            //Submit the ratings and reviews.
+            submitRatingsAndReview();
           }
         );
         
@@ -228,7 +283,8 @@ $(document).ready
         );
         
         //Get the closed transactions history.
-        getTransactionsHistory("#jqxgrid1","closed");      
+        getTransactionsHistory("#jqxgrid1","closed");
+       
       }
     )
   }

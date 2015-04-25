@@ -76,30 +76,36 @@
          To: <input type="text" id="datepicker2" class="hand_pointer" placeholder="mm/dd/yyyy" size="30"></Span>
        </div>
        
-       <button class="large_button Center" id="SubmitID" type="submit" value="Submit">Submit</button>
-       
       </div>
       
       <div class="right_middle_panel">
         
         <div class="button_panel">
-          <span class="Span_Fixed">Buyer:</span>
+          <span class="Span_Fixed5">Buyer:</span>
           <span id="SellerID"></span>
         </div>
         <div class="button_panel">
-          <span class="Span_Fixed">Ratings:</span>
-          <span id="RatingsID"></span>
+          <span class="Span_Fixed5">Ratings:</span>
+          <span>
+            <select id="RatingsID" >
+              <option value="1">Excellent</option>
+              <option value="2">Very Good</option>
+              <option value="3">Good</option>
+              <option value="4">Fair</option>
+              <option value="5">Poor</option>
+            </select>
+          </span>
         </div>
         <div class="button_panel">
-          <span class="Span_Fixed">Job:</span>
+          <span class="Span_Fixed5">Job:</span>
           <span id="JobID"></span>
         </div>
         <div class="button_panel">
-          <span class="Span_Fixed">Date:</Span>
+          <span class="Span_Fixed5">Job Date:</Span>
           <span id="DateID"></span>
         </div>
         <div class="text_panel">
-          <Span class = "Span_Text">Reviews:</Span><br>
+          <Span class = "Span_Text5">Reviews:</Span><br>
           <textarea id="ReviewsID">
           </textarea>
           <br>
@@ -114,10 +120,13 @@
     <div class="all_panels bottom_panel">
     
       <button class="medium_button" id="MainID" type="submit" value="Main">Main</button>
+      <button class="medium_button" id="SubmitID" type="submit" value="Submit">Submit</button>
       <button class="medium_button" id="LogoutID" type="submit" value="Logout">Logout</button>
       
     </div>
     
+    <?php include('../dialog.html'); ?>
+     
   </body>
   
 </html>
