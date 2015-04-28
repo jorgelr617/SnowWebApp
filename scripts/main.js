@@ -70,11 +70,13 @@
      var profile = googleUser;
   }
   
+  var user;
   //Sign in the Google user to the Web App.
   function onSignIn(googleUser)
   {
     //Get the user profile.
     var profile = googleUser.getBasicProfile();
+    user = googleUser;
     
     //Store the important aspects of the profile 
     //information in the server.
@@ -119,7 +121,10 @@
   function sendLoginRequest_successCallback(data, status, xhr) 
   {
     if(data.response == "success")
-      window.location.href = data.URL;
+    {
+      getCustomerType(user);
+      //window.location.href = data.URL;
+    }
     else
       document.write(data.msg);
   }
@@ -129,6 +134,120 @@
   {
     document.write(data); 
   }
+  
+   //Send the AJAX login request.
+  function getCustomerType(googleUser)
+  {
+    //Get the user's Google profile.
+    var profile = googleUser.getBasicProfile();
+    
+    //Get the user's ID.
+    user_id = profile.getId();
+    
+    //Get the user's email address.
+    user_email = profile.getEmail();
+
+    //Get the user's display name.
+    user_name = profile.getName();
+    
+    $.ajax 
+    (
+      {
+        type: "POST",
+        url: "php/getCustomerType.php",
+        data: 
+        {
+          userid: user_id,
+          username: user_email,
+          displayname: user_name,           
+          
+        },
+        dataType: "json",
+        success: getCustomerType_successCallback,
+        error: getCustomerType_errorCallback
+      }
+    );
+  }
+  
+  //Login success callback.
+  function getCustomerType_successCallback(data, status, xhr) 
+  {
+    if(data.response == "success")
+    {
+      if ((data.user_type != "buyer") && (data.user_type != "seller"))
+        $("#UserTypeID").dialog("open");
+      else
+      {
+        temp = data.user_type + ".html";
+        window.location.href = temp;
+      }
+       
+      //window.location.href = data.URL;
+    }
+    else
+      document.write(data.msg);
+  }
+  
+  //Login error callback.
+  function getCustomerType_errorCallback(data, status, xhr) 
+  {
+    document.write(data); 
+  }
+  
+  //Send the AJAX login request.
+  function setCustomerType(googleUser, user_type_val)
+  {
+    //Get the user's Google profile.
+    var profile = googleUser.getBasicProfile();
+    
+    //Get the user's ID.
+    user_id = profile.getId();
+    
+    //Get the user's email address.
+    user_email = profile.getEmail();
+
+    //Get the user's display name.
+    user_name = profile.getName();
+    
+    $.ajax 
+    (
+      {
+        type: "POST",
+        url: "php/setCustomerType.php",
+        data: 
+        {
+          userid: user_id,
+          username: user_email,
+          displayname: user_name,
+          user_type: user_type_val          
+          
+        },
+        dataType: "json",
+        success: setCustomerType_successCallback,
+        error: setCustomerType_errorCallback
+      }
+    );
+  }
+  
+  //Login success callback.
+  function setCustomerType_successCallback(data, status, xhr) 
+  {
+    if(data.response == "success")
+    {
+
+       
+      //window.location.href = data.URL;
+    }
+    else
+      document.write(data.msg);
+  }
+  
+  //Login error callback.
+  function setCustomerType_errorCallback(data, status, xhr) 
+  {
+    document.write(data); 
+  }
+ 
  
 $(document).ready
 (   
@@ -191,6 +310,31 @@ $(document).ready
       function(event) 
       {
         $("#DialogID").dialog("open");
+      }
+    );
+    
+    //Create the "User Type" jQuery dialog.
+    $("#UserTypeID").dialog
+    (
+      {
+        buttons: 
+        { 
+          "Buyer": function () 
+          {        
+             setCustomerType(user, "buyer");
+             window.location.href = "buyer.html";   
+            $(this).dialog( "close" ); 
+          },
+          "Seller": function () 
+          {   
+            setCustomerType(user, "seller");     
+            window.location.href = "seller.html";      
+            $(this).dialog( "close" ); 
+          },
+        },
+        resizable: false,
+        autoOpen: false,
+        modal: true
       }
     );
     

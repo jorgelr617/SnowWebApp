@@ -23,7 +23,7 @@ function loadScript(script_url,callback)
 }
 
 //Send the get transactions history request.
-function getTransactionsHistory(grid_id_val,status_val) 
+function getPurchaseHistory(grid_id_val,status_val) 
 {
  
   //Get the from date.
@@ -45,8 +45,8 @@ function getTransactionsHistory(grid_id_val,status_val)
           date_to:date2
         },
       dataType: "json",
-      success: getTransactionsHistory_successCallback,
-      error: getTransactionsHistory_errorCallback
+      success: getPurchaseHistory_successCallback,
+      error: getPurchaseHistory_errorCallback
     }
   );
 }
@@ -55,7 +55,7 @@ function getTransactionsHistory(grid_id_val,status_val)
 var purchase_history;
 
 //Success get transactions history callback.
-function getTransactionsHistory_successCallback(data, status, xhr) 
+function getPurchaseHistory_successCallback(data, status, xhr) 
 {
   if(data.response == "success")
   {
@@ -69,7 +69,7 @@ function getTransactionsHistory_successCallback(data, status, xhr)
 }
 
 //Error get transactions history callback.
-function getTransactionsHistory_errorCallback(data, status, xhr) 
+function getPurchaseHistory_errorCallback(data, status, xhr) 
 {
   //Clear the page state.
   clear_state(); 
@@ -80,7 +80,7 @@ function getTransactionsHistory_errorCallback(data, status, xhr)
 function submitRatingsAndReview() 
 {
  
-  //Get the grid's selected submisison date.
+  //Get the grid's selected submission date.
   var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
   
   //Ensure there is an item selected.
@@ -207,19 +207,11 @@ function populate_selected(data, index)
 //Clear all the data fields in the page.
 function clear_state()
 {
-  //Create JSON object to clear page state.
-  data = 
-  {
-    submission_date: " ",
-    customer_type: "",
-    service_type: " ",
-    contract_type: " ",
-    job_location: " ",
-    job_date: " "
-  };
-  
   //Clear the data grid UI.
-  createDataGridUI ("#jqxgrid1",data);
+  createDataGridUI ("#jqxgrid1",null);
+  var localizationobj = {};
+  localizationobj.emptydatastring = "No purchases history!";
+  $("#jqxgrid1").jqxGrid('localizestrings', localizationobj);
   
   //Clear out the data fields.
   $("#SellerID").text(" ");
@@ -266,7 +258,7 @@ $(document).ready
           function()
           {
             //Get the transactions history.
-            getTransactionsHistory("#jqxgrid1","closed");
+            getPurchaseHistory("#jqxgrid1","closed");
           }
         )
         
@@ -283,7 +275,7 @@ $(document).ready
         );
         
         //Get the closed transactions history.
-        getTransactionsHistory("#jqxgrid1","closed");
+        getPurchaseHistory("#jqxgrid1","closed");
        
       }
     )

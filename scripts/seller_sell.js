@@ -22,7 +22,7 @@ function loadScript(script_url,callback)
   );    
 }
 
-//Send the get transactions history request.
+//Send the insert buy info request.
 function insertBuyInfo()
 {
 
@@ -47,7 +47,7 @@ function insertBuyInfo()
   );
 }
 
-//Success insert request callback.
+//Success insert buy info request callback.
 function insertBuyInfo_successCallback(data, status, xhr) 
 {
   if(data.response == "success")
@@ -59,18 +59,23 @@ function insertBuyInfo_successCallback(data, status, xhr)
     getOpenRequests("#jqxgrid2","offer");
   }
   else
-    showErrorDialog(data);
+  {
+    //Clear the data grids UI.
+    clearSelectedDataGridUI("#jqxgrid1");
+    clearSelectedDataGridUI("#jqxgrid2");
+  }
 }
 
-//Error insert request callback.
+//Error insert buy info request callback.
 function insertBuyInfo_errorCallback(data, status, xhr) 
 {
-  //Display error messages.
-  showErrorDialog(data); 
+  //Clear the data grids UI.
+  clearSelectedDataGridUI("#jqxgrid1");
+  clearSelectedDataGridUI("#jqxgrid2");
 }
 
 //Send the bid offer request.
-function bidOfferRequest(submission_date_val)
+function bidOfferRequest(submission_date_val,amount_val)
 {
 
   $.ajax 
@@ -80,7 +85,8 @@ function bidOfferRequest(submission_date_val)
       url: "../php/bidOfferRequest.php",
       data: 
         {
-          submission_date:submission_date_val, 
+          submission_date:submission_date_val,
+          amount:amount_val
         },
       dataType: "json",
       success: bidOfferRequest_successCallback,
@@ -101,14 +107,19 @@ function bidOfferRequest_successCallback(data, status, xhr)
     getOpenRequests("#jqxgrid2","offer");
   }
   else
-    showErrorDialog(data);
+  {
+    //Clear the data grids UI.
+    clearSelectedDataGridUI("#jqxgrid1");
+    clearSelectedDataGridUI("#jqxgrid2");
+  }
 }
 
 //Error bid offer request callback.
 function bidOfferRequest_errorCallback(data, status, xhr) 
 {
-  //Display error messages.
-  showErrorDialog(data); 
+  //Clear the data grids UI.
+  clearSelectedDataGridUI("#jqxgrid1");
+  clearSelectedDataGridUI("#jqxgrid2");
 }
 
 //Send the get open request.
@@ -133,23 +144,29 @@ function getOpenRequests_successCallback(data, status, xhr)
 {
   if(data.response == "success")
   {
-    //Populate the page state.
-    populate_state(data);
+    //Create the data grid UI.
+    createDataGridUI(data);
   }
   else
-    //Clear the page state.
-    clear_state(data);
+    //Clear the data grid UI.
+    clearDataGridUI(data);
 }
 
 //Error get transactions history callback.
 function getOpenRequests_errorCallback(data, status, xhr) 
 {
-  //Clear the page state.
-  clear_state(data);
+  //Clear the data grid UI.
+  clearDataGridUI(data);
 }
 
 //Create the data grid UI.
-function createDataGridUI(grid_id,response) 
+function createDataGridUI(data) 
+{
+  createDataGrid(data.grid_id,data.msg);
+}
+
+//Create the data grid UI.
+function createDataGrid(grid_id,response) 
 {
  
   //Source of data
@@ -203,30 +220,38 @@ function createDataGridUI(grid_id,response)
   );
 }
 
-//Populate all the data fields in the page.
-function populate_state(data)
+//Clear the data grid UI.
+function clearDataGridUI(data)
 {
-  //Create the data grid UI.
-  createDataGridUI (data.grid_id,data.msg);
+  //Clear the data grid UI.
+  createDataGrid(data.grid_id, null);
+  
+  var empty_str;
+  if (data.status == "open")
+    empty_str = "No open requests!";
+  else
+    empty_str = "No offers made!";
+  
+  var localizationobj = {};
+  localizationobj.emptydatastring = empty_str;
+  $(data.grid_id).jqxGrid('localizestrings', localizationobj);
 }
 
-//Clear all the data fields in the page.
-function clear_state(data)
+//Clear the selected data grid UI.
+function clearSelectedDataGridUI(grid_id)
 {
-  //Create JSON object to clear page state.
-  empty_data = 
-  {
-    submission_date: " ",
-    customer_type: "",
-    service_type: " ",
-    contract_type: " ",
-    job_location: " ",
-    job_date: " "
-  };
+  //Clear the selected data grid UI.
+  createDataGrid(grid_id, null);
   
-  //Clear the data grid UI.
-  createDataGridUI (data.grid_id, empty_data);
+  var empty_str;
+  if (grid_id == "#jqxgrid1")
+    empty_str = "No open requests!";
+  else
+    empty_str = "No offers made!";
   
+  var localizationobj = {};
+  localizationobj.emptydatastring = empty_str;
+  $(grid_id).jqxGrid('localizestrings', localizationobj);
 }
 
 //Send the AJAX PayPal request.
@@ -276,7 +301,8 @@ $(document).ready
         
         var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
         var submission_date = $("#jqxgrid1").jqxGrid('getcellvalue', index, "submission_date");
-        bidOfferRequest(submission_date);
+        var amount = $("#AmountID").val();
+        bidOfferRequest(submission_date, amount);
       }
     );
         

@@ -66,7 +66,7 @@
         $transaction = array ('submission_date' => $submission_date, 'customer_type' =>$transaction_info['customer_type'], 
         'service_type' =>$services['service_type'], 'service_description' =>$services['service_description'], 
         'contract_type' =>$transaction_info['contract_type'], 'job_location'=>$transaction_info['job_location'], 
-        'job_date'=>$transaction_info['job_date'], 'status'=>$status );
+        'job_date'=>$transaction_info['job_date'], 'status'=>$status, 'amount'=>$transaction_info['amount']);
         
         //Create the transactions history.
         $transactions_list[$index] =  $transaction; 
@@ -74,13 +74,13 @@
       } 
       
       //Prepare the return results.
-      $arr = array ('response'=>'success', 'URL'=>'buyer.html','msg'=>$transactions_list,'grid_id'=>$grid_id);
+      $arr = array ('response'=>'success', 'msg'=>$transactions_list,'grid_id'=>$grid_id);
      
     }
     else 
     { 
       //Prepare the return results.
-      $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>"No results found!", 'grid_id'=>$grid_id);
+      $arr = array ('response'=>'error', 'msg'=>"No results found!", 'status'=>$status, 'grid_id'=>$grid_id);
     }
     
     //Encode the return results.
@@ -89,7 +89,7 @@
   catch(PDOException $excep) 
   {      
     //Prepare and encode the return results.
-    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>$excep->getMessage());
+    $arr = array ('response'=>'error','msg'=>$excep->getMessage());
     echo json_encode($arr);
   }
   

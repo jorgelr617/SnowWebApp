@@ -9,7 +9,7 @@ function loadScript(script_url,callback)
   if (typeof callback == "undefined")
     callback = {};
   
-  //Get the Javascript.
+  //Get the JavaScript.
   $.ajax
   (
     {
@@ -22,8 +22,8 @@ function loadScript(script_url,callback)
   );    
 }
 
-//Send the get transactions history request.
-function getTransactionsHistory(data_grid_id,status_state) 
+//Send the get purchase history request.
+function getPurchaseHistory(data_grid_id,status_state) 
 {
  
   //Get the from date.
@@ -39,8 +39,8 @@ function getTransactionsHistory(data_grid_id,status_state)
       url: "../php/getTransactionsHistory.php",
       data: {status:status_state, grid_id:data_grid_id, date_from:date1, date_to:date2},
       dataType: "json",
-      success: getTransactionsHistory_successCallback,
-      error: getTransactionsHistory_errorCallback
+      success: getPurchaseHistory_successCallback,
+      error: getPurchaseHistory_errorCallback
     }
   );
 }
@@ -48,8 +48,8 @@ function getTransactionsHistory(data_grid_id,status_state)
 //The purchase history.
 var purchase_history;
 
-//Success get transactions history callback.
-function getTransactionsHistory_successCallback(data, status, xhr) 
+//Success get purchase history callback.
+function getPurchaseHistory_successCallback(data, status, xhr) 
 {
   if(data.response == "success")
   {
@@ -62,8 +62,8 @@ function getTransactionsHistory_successCallback(data, status, xhr)
     clear_state();
 }
 
-//Error get transactions history callback.
-function getTransactionsHistory_errorCallback(data, status, xhr) 
+//Error get purchase history callback.
+function getPurchaseHistory_errorCallback(data, status, xhr) 
 {
   //Clear the page state.
   clear_state(); 
@@ -132,7 +132,7 @@ function populate_state(data, index)
   populate_selected(data, index);
 }
 
-//Populate labels in the page based on selected grid row.
+//Populate labels in the page based on the selected grid row.
 function populate_selected(data, index)
 { 
 
@@ -151,20 +151,12 @@ function populate_selected(data, index)
 //Clear all the data fields in the page.
 function clear_state()
 {
-  //Create JSON object to clear page state.
-  data = 
-  {
-    submission_date: " ",
-    customer_type: "",
-    service_type: " ",
-    contract_type: " ",
-    job_location: " ",
-    job_date: " "
-  };
-  
   //Clear the data grid UI.
-  createDataGridUI ("#jqxgrid1",data);
-    
+  createDataGridUI ("#jqxgrid1",null);
+  var localizationobj = {};
+  localizationobj.emptydatastring = "No purchase history!";
+  $("#jqxgrid1").jqxGrid('localizestrings', localizationobj);
+  
   //Clear out the data fields.
   $("#JobID").text(" ");
   $("#SellerID").text(" ");
@@ -204,7 +196,7 @@ $(document).ready
           function()
           {
             //Get the transactions history.
-            getTransactionsHistory("#jqxgrid1","closed");
+            getPurchaseHistory("#jqxgrid1","closed");
           }
         )
         
@@ -221,7 +213,7 @@ $(document).ready
         );
         
         //Get the closed transactions history.
-        getTransactionsHistory("#jqxgrid1","closed");
+        getPurchaseHistory("#jqxgrid1","closed");
         
       }
     )

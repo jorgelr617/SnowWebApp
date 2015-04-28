@@ -120,37 +120,33 @@
           </div>
           <br>
         </div>
-        <br>
         
         <div>
-          <button class="small_button Button_Align" id="AddID" type="submit" value="Add">Add</button>
-          <button class="small_button Button_Align" id="Delete2ID" type="submit" value="Delete">Delete</button>
-          <button class="small_button Button_Align" id="PurchaseID" type="submit" value="Purchase">Purchase</button>
-          
-
-          </div>
-
-
+        <button class="medium_button" id="MyShoppingCartID" type="submit" value="Main">Shopping Cart</button>
         
-
-<form  id="AddButtonID" name="_xclick" target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_cart">
-<input type="hidden" name="business" value="snowwebapp-facilitator@gmail.com">
-<input type="hidden" name="currency_code" value="US">
-<input type="hidden" name="item_name" value="HTML book">
-<input id="AddICartID" type="hidden" name="amount" value="24.99">
-<input type="image" src="http://www.paypal.com/en_GB/i/btn/sc-but-01.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
-<input type="hidden" name="add" value="1">
-</form>
-
-  <form name="_xclick" target="paypal" action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_cart">
-<input type="hidden" name="business" value="snowwebapp-facilitator@gmail.com">
-<input type="image" src="https://www.paypal.com/en_GB/i/btn/view_cart.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
-<input type="hidden" name="display" value="1">
-</form>      
+        <!-- Submitted via jQuery: See file "buyer_buy.js" file. -->
+        <form target="_self" class="center_align" id="AddButtonID" >
+          <input type="hidden" name="cmd" value="_cart">
+          <input type="hidden" name="lc" value="US">
+          <input type="hidden" name="tax_rate" value="">
+          <input type="hidden" name="shipping" value="">
+          <input type="hidden" name="business" value="snowwebapp-facilitator@gmail.com">
+          <input type="hidden" name="currency_code" value="USD">
+          <input type="hidden" name="item_name" value="HTML book">
+          <input id="AddICartID" type="hidden" name="amount" value="">
+          <input type="image" src="http://www.paypal.com/en_GB/i/btn/sc-but-01.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+          <input type="hidden" name="add" value="1">
+        </form>
         
-    
+        <!-- Submitted via jQuery: See file "buyer_buy.js" file. -->
+        <form  target="_self"  class="center_align"  id="ShoppingCartID" >
+          <input type="hidden" name="cmd" value="_cart">
+          <input type="hidden" name="business" value="snowwebapp-facilitator@gmail.com">
+          <input type="image" src="https://www.paypal.com/en_GB/i/btn/view_cart.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+          <input type="hidden" name="display" value="1">
+       </form>      
+        
+     </div>
       
     </div>
     

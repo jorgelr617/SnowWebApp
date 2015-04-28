@@ -23,6 +23,23 @@
   margin-bottom: 5px;
 }
 
+.single_middle_panel
+{
+  background-color: DarkGray;
+  border: 2px solid White;
+  border-radius: 25px;
+  padding: 5px;
+  display: inline-block;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
 .group_panel
 {
   background-color: LightGray;
@@ -58,6 +75,7 @@
   margin-right: auto;
   margin-top: 10px;
   margin-bottom: 10px;
+   
 } 
 
 .small_button_panel
@@ -77,6 +95,7 @@
 .bottom_panel, .top_panel, .center_align
 {
   text-align:center;
+
 }
 
 .small_button
@@ -168,13 +187,13 @@
  * both hand and pointer to support all browsers
  * and even old ones.
  */
-button, .hand_pointer
+button, select, #jqxgrid1, #jqxgrid2, #jqxgrid3, .hand_pointer
 { 
   cursor: pointer;
   cursor: hand; 
 }
 
-button:hover 
+button:hover , select:hover,  #datepicker:hover, #datepicker1:hover, #datepicker2:hover
 {
   background: Blue;
 }
@@ -210,6 +229,30 @@ select
   margin-left: auto; 
   margin-right: auto;
 }
+
+table, th, td {
+    border: 2px solid white;
+        margin-left:auto; 
+    margin-right:auto;
+
+}
+
+tr:nth-child(even)
+{
+  background-color: CornflowerBlue;
+}
+
+tr:nth-child(odd)
+{
+  background-color: White;
+}
+
+#header_row
+{
+  background-color: DarkBlue;
+  color: White;
+}
+
 
 /*----- Tabs -----*/
 .tabs 

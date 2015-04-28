@@ -48,20 +48,28 @@ function getActiveRequests_successCallback(data, status, xhr)
   if(data.response == "success")
   {
     //Create the data grid UI.
-    createDataGridUI (data.grid_id,data.msg);
+    createDataGridUI (data);
   }
   else
-    showErrorDialog(data.msg);
+    //Clear the data grid UI.
+    clearDataGridUI(data);
 }
 
 //Error get active requests callback.
 function getActiveRequests_errorCallback(data, status, xhr)
 {
-  showErrorDialog("An unknown error was encountered."); 
+  //Clear the data grid UI.
+  clearDataGridUI(data);
 }
 
 //Create the data grid UI.
-function createDataGridUI(grid_id,response) 
+function createDataGridUI(data) 
+{
+  createDataGrid(data.grid_id,data.msg);
+}
+
+//Create the data grid UI.
+function createDataGrid(grid_id,response) 
 {
  
   //Source of data
@@ -111,35 +119,25 @@ function createDataGridUI(grid_id,response)
       ]
     }
   );
-}  
-
-//Sign out the web application.
-function signOut() 
-{
- 
-  gapi.load
-  (
-    'auth2', 
-    function()
-    {
-      // Retrieve the singleton for the GoogleAuth library and set up the client.
-      auth2 = gapi.auth2.init
-      (
-        {
-          client_id: '1047428674743-87qcsebbamet91gbdmj01cipe52ntui8.apps.googleusercontent.com',
-          cookiepolicy: 'single_host_origin',
-          // Request scopes in addition to 'profile' and 'email'
-          //scope: 'additional_scope'
-        }
-      );
-    }
-  );
-  
-  //var auth2 = gapi.auth2.getAuthInstance();
-  auth3 = gapi.auth;
-  auth3.signOut();   
 }
 
+//Clear the data grid UI.
+function clearDataGridUI(data)
+{
+  //Clear the data grid UI.
+  createDataGrid(data.grid_id, null);
+  
+  var empty_str;
+  if (data.status == "offer")
+    empty_str = "No open offers!";
+  else
+    empty_str = "No jobs waiting completion!";
+  
+  var localizationobj = {};
+  localizationobj.emptydatastring = empty_str;
+  $(data.grid_id).jqxGrid('localizestrings', localizationobj);
+  
+}
 
 //Execute when the page can be 
 //manipulated safely by JavaScipt.
@@ -204,8 +202,8 @@ $(document).ready
           }
         );
         
-        //Get the open requests.
-        getActiveRequests("#jqxgrid1","open");
+        //Get the open offer requests.
+        getActiveRequests("#jqxgrid1","offer");
         
         //Get the waiting completion requests.
         getActiveRequests("#jqxgrid2","waiting");

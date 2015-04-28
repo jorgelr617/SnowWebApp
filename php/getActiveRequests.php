@@ -74,12 +74,12 @@
       }
       
       //Prepare the return results.
-      $arr = array ('response'=>'success', 'URL'=>'buyer.html','msg'=>$transactions_list,'grid_id'=>$grid_id);
+      $arr = array ('response'=>'success','msg'=>$transactions_list,'grid_id'=>$grid_id);
     }
     else 
     { 
       //Prepare the return results.
-      $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>"No results found!");
+      $arr = array ('response'=>'error', 'msg'=>"No results found!", 'status'=>$status, 'grid_id'=>$grid_id);
     }
     
     //Encode the return results.
@@ -88,7 +88,7 @@
   catch(PDOException $excep) 
   {      
     //Prepare and encode the return results.
-    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>$excep->getMessage());
+    $arr = array ('response'=>'error', 'msg'=>$excep->getMessage(),'grid_id'=>$grid_id);
     echo json_encode($arr);
   }
   

@@ -64,6 +64,52 @@ function insertBuyInfo_errorCallback(data, status, xhr)
   showErrorDialog(data); 
 }
 
+//Send the get transactions history request.
+function pay()
+{
+
+  $("#AddButtonID").submit();
+  //var data = $('#AddButtonID').serialize();
+  //$.post('https://www.sandbox.paypal.com/cgi-bin/webscr', data);
+
+
+/*
+$('#AddButtonID').click( function() {
+    $.ajax({
+        url: 'https://www.sandbox.paypal.com/cgi-bin/webscr',
+        type: 'post',
+        dataType: 'json',
+        data: $("#AddButtonID").serialize(),
+        success: function(data) {
+                   showDisplayErrorMsg("test");
+                 },
+       error: function(data) {
+          showDisplayErrorMsg("test");
+        }
+    });
+}); */
+
+}
+
+//Success insert request callback.
+function pay_successCallback(data, status, xhr) 
+{
+  if(data.response == "success")
+    //Get the open transaction history.
+    getOpenRequests("#jqxgrid1","open");
+  else
+    showErrorDialog(data);
+}
+
+//Error insert request callback.
+function pay_errorCallback(data, status, xhr) 
+{
+  //Display error messages.
+  showErrorDialog(data); 
+}
+
+
+
 //Send the delete transactions history request.
 function cancelBuyRequest(submission_date_val)
 {
@@ -123,23 +169,29 @@ function getOpenRequests_successCallback(data, status, xhr)
 {
   if(data.response == "success")
   {
-    //Populate the page state.
-    populate_state(data);
+    //Create the data grid UI.
+    createDataGridUI(data);
   }
   else
-    //Clear the page state.
-    clear_state(data);
+    //Clear the data grid UI.
+    clearDataGridUI(data);
 }
 
 //Error get transactions history callback.
 function getOpenRequests_errorCallback(data, status, xhr) 
 {
-  //Clear the page state.
-  clear_state(data);
+  //Clear the data grid UI.
+  clearDataGridUI(data);
 }
 
 //Create the data grid UI.
-function createDataGridUI(grid_id,response) 
+function createDataGridUI(data) 
+{
+  createDataGrid(data.grid_id,data.msg);
+}
+
+//Create the data grid UI.
+function createDataGrid(grid_id,response) 
 {
  
   //Source of data
@@ -151,6 +203,9 @@ function createDataGridUI(grid_id,response)
     [
       {
         name: 'submission_date', map: 'submission_date'
+      },
+      {
+        name: 'amount', map: 'amount'
       },
       {
         name: 'service_type', map: 'service_description'
@@ -183,8 +238,9 @@ function createDataGridUI(grid_id,response)
       columns: 
       [
         { text: 'Submission Date', datafield: 'submission_date', width: 150 },
-        { text: 'Customer Type', datafield: 'customer_type', width: 110 },
+        { text: 'Offer', datafield: 'amount', width: 50 },
         { text: 'Service Type', datafield: 'service_type', width: 300 },
+        { text: 'Customer Type', datafield: 'customer_type', width: 110 },
         { text: 'Contract Type', datafield: 'contract_type', width: 110 },
         { text: 'Job Location', datafield: 'job_location', width: 110 },
         { text: 'Job Date', datafield: 'job_date', width: 150 }
@@ -193,30 +249,21 @@ function createDataGridUI(grid_id,response)
   );
 }
 
-//Populate all the data fields in the page.
-function populate_state(data)
+//Clear the data grid UI.
+function clearDataGridUI(data)
 {
-  //Create the data grid UI.
-  createDataGridUI (data.grid_id,data.msg);
-}
-
-//Clear all the data fields in the page.
-function clear_state(data)
-{
-  //Create JSON object to clear page state.
-  empty_data = 
-  {
-    submission_date: " ",
-    customer_type: "",
-    service_type: " ",
-    contract_type: " ",
-    job_location: " ",
-    job_date: " "
-  };
-  
   //Clear the data grid UI.
-  createDataGridUI (data.grid_id, empty_data);
+  createDataGrid(data.grid_id, null);
   
+  var empty_str;
+  if (data.status == "open")
+    empty_str = "No open requests!";
+  else
+    empty_str = "No offers received!";
+  
+  var localizationobj = {};
+  localizationobj.emptydatastring = empty_str;
+  $(data.grid_id).jqxGrid('localizestrings', localizationobj);
 }
 
 //Send the AJAX PayPal request.
@@ -291,25 +338,6 @@ $(document).ready
           }
         );
         
-        $("#AddButtonID").click
-        (
-          function ()
-          {
-            
-            var index = $('#jqxgrid1').jqxGrid('getselectedrowindex');
-            var submission_date = $("#jqxgrid1").jqxGrid('getcellvalue', index, "submission_date");
-            $("#AddICartID").prop('value','7777');
-          }
-        );
-        
-        $("#AddID, #Delete2ID, #PurchaseID").click
-        (
-          function ()
-          {
-            alert("Not implmenetd yet. Click on \"Main or Logout Button\" button.");
-          }
-        );
-        
         //Paypal page.
         $("#PaypalID").click
         (
@@ -323,7 +351,42 @@ $(document).ready
         getOpenRequests("#jqxgrid1","open");
         
         //Get the open transaction history.
-        getOpenRequests("#jqxgrid2","waiting");
+        getOpenRequests("#jqxgrid2","offer");
+        
+        //Add item to shopping cart.
+        $("#AddButtonID").click
+        (
+          function()
+          {
+           
+            var index = $('#jqxgrid2').jqxGrid('getselectedrowindex');
+            var amount_val = $('#jqxgrid2').jqxGrid('getcellvalue', index, 'amount');
+            $("#AddICartID").prop('value',amount_val);
+           
+            $("#AddButtonID").attr('action','https://www.sandbox.paypal.com/cgi-bin/webscr');
+            $("#AddButtonID").submit();
+            
+          }
+        );
+        
+        //View ShoppingCart page.
+        $("#ShoppingCartID").click
+        (
+          function()
+          {            
+            $("#ShoppingCartID").attr('action','https://www.sandbox.paypal.com/cgi-bin/webscr');
+            $("#ShoppingCartID").submit();
+          }
+        );
+        
+        //My ShoppingCart page.
+        $("#MyShoppingCartID").click
+        (
+          function()
+          {            
+             window.location.href="../shopping_cart.html";
+          }
+        );
         
       }
     )
