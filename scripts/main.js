@@ -70,13 +70,11 @@
      var profile = googleUser;
   }
   
-  var user;
   //Sign in the Google user to the Web App.
   function onSignIn(googleUser)
   {
     //Get the user profile.
     var profile = googleUser.getBasicProfile();
-    user = googleUser;
     
     //Store the important aspects of the profile 
     //information in the server.
@@ -90,24 +88,25 @@
     var profile = googleUser.getBasicProfile();
     
     //Get the user's ID.
-    user_id = profile.getId();
+    userid_val = profile.getId();
     
-    //Get the user's email address.
-    user_email = profile.getEmail();
+    //Get the user's email address, which
+    //is sued as the username.
+    username_val = profile.getEmail();
 
     //Get the user's display name.
-    user_name = profile.getName();
+    displayname_val = profile.getName();
     
-    $.ajax 
+    $.ajax
     (
       {
         type: "POST",
         url: "php/login.php",
         data: 
         {
-          userid: user_id,
-          username: user_email,
-          displayname: user_name,           
+          userid: userid_val,
+          username: username_val,
+          displayname: displayname_val,
           
         },
         dataType: "json",
@@ -116,14 +115,15 @@
       }
     );
   }
-    
+  
   //Login success callback.
   function sendLoginRequest_successCallback(data, status, xhr) 
   {
     if(data.response == "success")
     {
-      getCustomerType(user);
-      //window.location.href = data.URL;
+      //Get the customer type to determine which page
+      //to redirect the user to.
+      getCustomerType();
     }
     else
       document.write(data.msg);
@@ -135,33 +135,14 @@
     document.write(data); 
   }
   
-   //Send the AJAX login request.
-  function getCustomerType(googleUser)
+   //Send the get customer type request.
+  function getCustomerType()
   {
-    //Get the user's Google profile.
-    var profile = googleUser.getBasicProfile();
-    
-    //Get the user's ID.
-    user_id = profile.getId();
-    
-    //Get the user's email address.
-    user_email = profile.getEmail();
-
-    //Get the user's display name.
-    user_name = profile.getName();
-    
     $.ajax 
     (
       {
         type: "POST",
         url: "php/getCustomerType.php",
-        data: 
-        {
-          userid: user_id,
-          username: user_email,
-          displayname: user_name,           
-          
-        },
         dataType: "json",
         success: getCustomerType_successCallback,
         error: getCustomerType_errorCallback
@@ -175,14 +156,18 @@
     if(data.response == "success")
     {
       if ((data.user_type != "buyer") && (data.user_type != "seller"))
-        $("#UserTypeID").dialog("open");
+      {
+        //This is the first time that the user is 
+        //login into the "Snow Web App".
+        //Ask the user to identify as a buyer or seller.
+        $("#NewUserID").dialog("open");
+      }
       else
       {
-        temp = data.user_type + ".html";
+        //Redirect the type of user to the right page.
+        var temp = data.user_type + ".html";
         window.location.href = temp;
       }
-       
-      //window.location.href = data.URL;
     }
     else
       document.write(data.msg);
@@ -195,20 +180,9 @@
   }
   
   //Send the AJAX login request.
-  function setCustomerType(googleUser, user_type_val)
+  function setCustomerType(user_type_val)
   {
-    //Get the user's Google profile.
-    var profile = googleUser.getBasicProfile();
-    
-    //Get the user's ID.
-    user_id = profile.getId();
-    
-    //Get the user's email address.
-    user_email = profile.getEmail();
 
-    //Get the user's display name.
-    user_name = profile.getName();
-    
     $.ajax 
     (
       {
@@ -216,11 +190,7 @@
         url: "php/setCustomerType.php",
         data: 
         {
-          userid: user_id,
-          username: user_email,
-          displayname: user_name,
           user_type: user_type_val          
-          
         },
         dataType: "json",
         success: setCustomerType_successCallback,
@@ -280,7 +250,7 @@ $(document).ready
 
     
     //Create the "Login Information" jQuery dialog.
-    $("#DialogID").dialog
+    $("#CreateAccountID").dialog
     (
       {
         buttons: 
@@ -309,25 +279,25 @@ $(document).ready
       "click", 
       function(event) 
       {
-        $("#DialogID").dialog("open");
+        $("#CreateAccountID").dialog("open");
       }
     );
     
     //Create the "User Type" jQuery dialog.
-    $("#UserTypeID").dialog
+    $("#NewUserID").dialog
     (
       {
         buttons: 
         { 
           "Buyer": function () 
           {        
-             setCustomerType(user, "buyer");
+             setCustomerType("buyer");
              window.location.href = "buyer.html";   
             $(this).dialog( "close" ); 
           },
           "Seller": function () 
           {   
-            setCustomerType(user, "seller");     
+            setCustomerType("seller");     
             window.location.href = "seller.html";      
             $(this).dialog( "close" ); 
           },

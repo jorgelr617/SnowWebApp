@@ -23,7 +23,7 @@ function loadScript(script_url,callback)
 }
 
 //Send the get transactions history request.
-function getPurchaseHistory(grid_id_val,status_val) 
+function getPurchaseHistory(grid_id_val) 
 {
  
   //Get the from date.
@@ -39,8 +39,8 @@ function getPurchaseHistory(grid_id_val,status_val)
       url: "../php/getRatingsAndReview.php",
       data: 
         {
-          status:status_val, 
           grid_id:grid_id_val, 
+          status: "closed", 
           date_from:date1, 
           date_to:date2
         },
@@ -192,9 +192,18 @@ function populate_state(data, index)
 //Populate labels in the page based on selected grid row.
 function populate_selected(data, index)
 { 
+  //Create the full name.
+  var temp = "";
+  if (data.msg[index].first_name != null)
+    temp = data.msg[index].first_name;
+  if (data.msg[index].middle_name != null)
+    temp = temp  + " " + data.msg[index].middle_name;
+  if (data.msg[index].last_name != null)
+    temp = temp + " " + data.msg[index].last_name;
+  
   //Fill out the data fields.
-  $("#SellerID").text(data.msg[index].first_name + " " + data.msg[index].middle_name + " " + data.msg[index].last_name);
-  $("#RatingsID").attr('selectedIndex', data.msg[index].rating);
+  $("#SellerID").text(temp);
+  $("#RatingsID").val(data.msg[index].rating);
   $("#JobID").text(data.msg[index].service_description);
   $("#DateID").text(data.msg[index].submission_date);
   $("#ReviewsID").text(data.msg[index].review);
@@ -258,7 +267,7 @@ $(document).ready
           function()
           {
             //Get the transactions history.
-            getPurchaseHistory("#jqxgrid1","closed");
+            getPurchaseHistory("#jqxgrid1");
           }
         )
         
@@ -275,7 +284,7 @@ $(document).ready
         );
         
         //Get the closed transactions history.
-        getPurchaseHistory("#jqxgrid1","closed");
+        getPurchaseHistory("#jqxgrid1");
        
       }
     )

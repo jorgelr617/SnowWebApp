@@ -23,7 +23,7 @@ function loadScript(script_url,callback)
 }
 
 //Send the get sales history request.
-function getSalesHistory(grid_id_val,status_val) 
+function getSalesHistory(grid_id_val) 
 {
  
   //Get the from date.
@@ -38,11 +38,11 @@ function getSalesHistory(grid_id_val,status_val)
       type: "POST",
       url: "../php/getRatingsAndReview.php",
       data: 
-        {
-          status:status_val, 
-          grid_id:grid_id_val, 
+        {         
+          grid_id:grid_id_val,
+          status:"closed", 
           date_from:date1, 
-          date_to:date2
+          date_to:date2,
         },
       dataType: "json",
       success: getSalesHistory_successCallback,
@@ -192,9 +192,17 @@ function populate_state(data, index)
 //Populate labels in the page based on selected grid row.
 function populate_selected(data, index)
 { 
-  //Fill out the data fields.
-  $("#SellerID").text(data.msg[index].first_name + " " + data.msg[index].middle_name + " " + data.msg[index].last_name);
-  $("#RatingsID").text(data.msg[index].stars);
+  //Create the full name.
+  var temp = "";
+  if (data.msg[index].first_name != null)
+    temp = data.msg[index].first_name;
+  if (data.msg[index].middle_name != null)
+    temp = temp  + " " + data.msg[index].middle_name;
+  if (data.msg[index].last_name != null)
+    temp = temp + " " + data.msg[index].last_name;
+  
+  $("#BuyerID").text(temp);
+  $("#RatingsID").val(data.msg[index].rating);
   $("#JobID").text(data.msg[index].service_description);
   $("#DateID").text(data.msg[index].submission_date);
   $("#ReviewsID").text(data.msg[index].review);
@@ -214,7 +222,7 @@ function clear_state()
   $("#jqxgrid1").jqxGrid('localizestrings', localizationobj);
   
   //Clear out the data fields.
-  $("#SellerID").text(" ");
+  $("#BuyerID").text(" ");
   $("#RatingsID").text(" ");
   $("#JobID").text(" ");
   $("#DateID").text(" ");

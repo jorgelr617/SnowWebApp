@@ -108,8 +108,6 @@ function pay_errorCallback(data, status, xhr)
   showErrorDialog(data); 
 }
 
-
-
 //Send the delete transactions history request.
 function cancelBuyRequest(submission_date_val)
 {
@@ -308,6 +306,7 @@ $(document).ready
       '../scripts/common.js',
       function()
       {
+       
         $( "#datepicker" ).datepicker({ dateFormat: 'yy-mm-dd'});
         
         $("#MainID").click

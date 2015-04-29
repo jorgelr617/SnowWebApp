@@ -16,11 +16,21 @@
 }
 
 /* Dialog color. */
-#DialogID
+#CreateAccountID , #NewUserID
 {
-  background-color: #c0c0c0;
+  background-color: CornflowerBlue;
+  color: white;
   margin: 0;
 }
+
+/* Align title of dialoge. */
+.ui-dialog-title 
+{
+  float:none;
+  display: block;
+  text-align: center;
+}
+
 
  /* Google button */
 #customBtn 

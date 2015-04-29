@@ -35,7 +35,9 @@
       $review = " ";
     else
       $review = $_POST['review'];
-     
+    
+    //Get the user type from the session.
+    $user_type = $_SESSION['user_type'];
     
     //Include the database connection.
     include "database_connect.php";
@@ -47,8 +49,15 @@
     $record = $stmt->fetch();
     $stmt->closeCursor();
     
-    //Get the "ratings and reviews" foreign key.
-    $id_ratings_and_reviews_fk = $record['id_ratings_and_reviews_fk'];
+    //Depending on the user, rate the other (buyer or seller).
+    if ($user_type == "buyer")
+    {
+      $id_ratings_and_reviews_fk = $record['id_ratings_and_reviews_seller_fk'];
+    }
+    else
+    {
+      $id_ratings_and_reviews_fk = $record['id_ratings_and_reviews_buyer_fk'];
+    }
     
     //Check that the foreign key is valid, so that the "ratings and reviews" 
     //record can be retrieved if it exists.

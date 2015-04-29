@@ -202,6 +202,9 @@ $(document).ready
           }
         );
         
+        //Display the seller's full name.
+        displayUserFullname("#FullNameID");
+        
         //Get the open offer requests.
         getActiveRequests("#jqxgrid1","offer");
         

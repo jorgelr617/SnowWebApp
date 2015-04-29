@@ -10,23 +10,30 @@
   
   try
   {
-    //Check that the username parameter has been passed.
-    if ( !(isset($_POST['username'])) || (trim($_POST['username']) == ''))
-      $username = "open";
+    //Check that the username parameter is valid.
+    if ( !(isset($_SESSION['username'])) || (trim($_SESSION['username']) == ''))
+    {
+      //Prepare and encode the return results.
+      $arr = array ('response'=>'error', 'Invalid username!');
+      echo json_encode($arr);
+      
+      //Done. Don't continue.
+      exit();
+    }
     else
-      $username = $_POST['username'];
+      $username = $_SESSION['username'];
     
     //Include the database connection.
     include "database_connect.php";
     
-    //Get the requested user.
+    //Get the requested user, "user_account" record.
     $stmt = $db->prepare("select * from user_account where username=?");
     $stmt->bindParam(1, $username);
     $stmt->execute();
     $user_account = $stmt->fetch();
     $stmt->closeCursor();
     
-    //Check that it retuned records.
+    //Check that it found the user.
     if ( $user_account != false )
     {
       //Get the foreign key for the "user info" record.
@@ -55,7 +62,7 @@
   catch(PDOException $excep) 
   {      
     //Prepare and encode the return results.
-    $arr = array ('response'=>'error', 'URL'=>'main.html', 'msg'=>$excep->getMessage());
+    $arr = array ('response'=>'error', 'msg'=>$excep->getMessage());
     echo json_encode($arr);
   }
   

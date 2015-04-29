@@ -10,11 +10,24 @@
   
   try
   {
+    //Check that the id parameter has been passed.
+    if ( !(isset($_POST['id'])) || (trim($_POST['id']) == ''))
+    {
+      //Prepare and encode the return results.
+      $arr = array ('response'=>'error', 'Invalid id!', 'id'=>'0');
+      echo json_encode($arr);
+      
+      //Done. Don't continue.
+      exit();
+    }
+    else
+      $id = $_POST['id'];
+     
     //Check that the username parameter is valid.
     if ( !(isset($_SESSION['username'])) || (trim($_SESSION['username']) == ''))
     {
       //Prepare and encode the return results.
-      $arr = array ('response'=>'error', 'Invalid username!');
+      $arr = array ('response'=>'error', 'Invalid username!', 'id'=>$id);
       echo json_encode($arr);
       
       //Done. Don't continue.
@@ -22,12 +35,6 @@
     }
     else
       $username = $_SESSION['username'];
-    
-    //Check that the user type parameter has been passed.
-    if ( !(isset($_POST['user_type'])) || (trim($_POST['user_type']) == ''))
-      $user_type = "buyer";
-    else
-      $user_type = $_POST['user_type']; 
     
     //Include the database connection.
     include "database_connect.php";
@@ -46,25 +53,41 @@
       $id_user_info_fk =  $user_account['id_user_info_fk'];
       
       //Get the requested "user info" record.
-      $stmt = $db->prepare("update user_info set user_type=? where id_user_info_pk=?");
-      $stmt->bindParam(1, $user_type);
-      $stmt->bindParam(2, $id_user_info_fk);
+      $stmt = $db->prepare("select * from user_info where id_user_info_pk=?");
+      $stmt->bindParam(1, $id_user_info_fk);
       $stmt->execute();
       $user_info = $stmt->fetch();
       $stmt->closeCursor();
       
-      //Set the user type, buyer or seller.
-      $_SESSION['user_type'] = $user_type;
+      //Create the full name from the user's profile data.
+      $fullname ="";
+      if ($user_info['first_name'] != null)
+      {       
+        $fullname = $user_info['first_name'];
+      }
       
+      if ($user_info['middle_name'] != null)
+      {
+        $fullname = $fullname + " " + $user_info['middle_name'];
+      }
+      
+      if ($user_info['last_name'] != null)
+      {
+        $fullname = $fullname + " " + $user_info['last_name'];
+      }
+      
+      //If the user specified name is empty, use the session's name.
+      if (trim($fullname) == '')
+        $fullname = $_SESSION['username'];
       
       //Prepare the return results.
-      $arr = array ('response'=>'success', 'msg'=>"User information has been updated!", 'user_type' =>$user_type);
+      $arr = array ('response'=>'success', 'fullname'=>$fullname , 'id'=>$id);
       
     }
     else 
     { 
       //Prepare the return results.
-      $arr = array ('response'=>'error', 'msg'=>"User was not found!");
+      $arr = array ('response'=>'error', 'msg'=>"User was not found!", 'id'=>$id);
     }
     
     //Encode the return results.
@@ -73,7 +96,7 @@
   catch(PDOException $excep) 
   {      
     //Prepare and encode the return results.
-    $arr = array ('response'=>'error', 'msg'=>$excep->getMessage());
+    $arr = array ('response'=>'error', 'msg'=>$excep->getMessage(), 'id'=>$id);
     echo json_encode($arr);
   }
   

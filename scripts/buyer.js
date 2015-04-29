@@ -202,6 +202,9 @@ $(document).ready
           }
         );
         
+        //Display the user's full name.
+        displayUserFullname("#FullNameID");
+        
         //Get the open requests.
         getActiveRequests("#jqxgrid1","open");
         
